@@ -1,14 +1,70 @@
-① 単一のブログ記事ページ用プロンプト（index.html）<br><br>
+以下の内容をもとに、日本語でブログ記事を書いてください。<br>
+
+記事のテーマは「備忘録」で、本文は「<br>
+」です。
+<br>
+記事のポイント：<br>
+- 読者は自分を想定  
+- できるだけわかりやすく、具体例を交えて説明してください  
+- 見出しをいくつか付けて読みやすく構成してください  
+- 文章は自然な会話調で親しみやすいトーンでお願いします  
+-可能な限り全文掲載で、詳細にお願いします
+-引用元のリンクやURLがある場合はもれなく併記してください
+- 重要なキーワードはおまかせします。重要なキーワードを適度に含めてください
+<br><br>
+この条件をもとに、オリジナルの文章でブログ記事を書いてください。<br><br>
+
+あなたは、モダンなフロントエンド開発に精通した、実装に厳密なプロのエンジニアです。<br>
+以下の【前提条件】と【ページ要件】をすべて満たし、与えられた【ブログ記事本文】をHTML化した、完成形の index.html ファイルのコードのみを出力してください。
+<br><br>【前提条件】<br>
+ * サイト構成:
+   * サーバーのルートディレクトリに /ai-comparison-test-site/ というフォルダがあり、その中に header.html と style.css が既に配置されています。
+   * GitHub Pagesでの公開を想定しており、サーバーサイドの処理（SSIなど）は利用できません。
+ * 外部ファイル:
+   * /ai-comparison-test-site/header.html: サイト共通のヘッダー部分が記述されたHTMLファイルです。Google Analyticsのタグもこのファイル内に既に含まれています。
+   * /ai-comparison-test-site/style.css: サイト全体のスタイルを定義したCSSファイルです。以下の要素は既に定義済みです。
+     * モダンで洗練されたデザイン（レスポンシブ対応、落ち着いた配色とアクセントカラー、読みやすいフォント設定など）。
+     * .site-header, .header-container などのヘッダー関連クラス。
+     * 主要なHTMLタグ（h1, p, a など）の基本的なスタイルと、ホバー/クリック時のエフェクト。
+     * コンテンツのレイアウトを補助するクラス。
+ * 技術制約:
+   * 追加CSSの禁止: 原則として style.css のみを使用します。JavaScriptで動きを実装するために必要最低限のインラインCSS（&lt;style&gt;タグ）の追加は許可しますが、20行以内に収めてください。
+   * 外部ライブラリの禁止: jQueryなどの外部JavaScriptフレームワークやライブラリは使用しないでください。素のJavaScript（Vanilla JS）で実装してください。
+<br><br>【ページ要件】<br>
+ * HTML基本構造:
+   * 文字コードはUTF-8とし、&lt;!DOCTYPE html&gt;から&lt;/html&gt;まで、完全なHTML構造で記述してください。
+   * &lt;head&gt;内で/ai-comparison-test-site/style.cssを1回だけ読み込んでください（重複読み込みは禁止）。
+   * モバイルフレンドリーにするため、適切なmeta viewportタグを設定してください。
+ * コンテンツとレイアウト:
+   * 【ブログ記事本文】の内容を分析し、最も適切で魅力的な日本語のページタイトルを&lt;title&gt;タグに設定してください。
+   * &lt;h1&gt;, &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;blockquote&gt;などのタグを適切に使い分け、論理的でセマンティックな文書構造を構築してください。
+   * 記事内に画像URLがある場合は、&lt;figure&gt;, &lt;img&gt;, &lt;figcaption&gt;を使い、alt属性を必ず設定してください。画像はレスポンシブに対応させ（例: max-width: 100%）、常に親要素の幅を超えないようにしてください。
+   * 記事内にURLがある場合は、必ずクリック可能なリンク（&lt;a&gt;タグ）にし、リンクテキストと共にURL自体も併記してください。
+   * 固定ヘッダーがコンテンツに重ならないよう、本文の開始位置には適切な余白（paddingやmargin）を確保してください。
+ * JavaScriptによる動的機能（すべて実装必須）:
+   * ヘッダーの動的読み込み: &lt;body&gt;の最上部に&lt;div id="header-mount"&gt;&lt;/div&gt;を配置します。JavaScriptのfetch APIとDOMParserを使い、/ai-comparison-test-site/header.htmlの内容を取得し、その中身だけを#header-mountに挿入してください。
+   * 目次の自動生成: ページ内の&lt;h2&gt;と&lt;h3&gt;見出しをすべて抽出し、記事の冒頭（&lt;h1&gt;の後）にアンカーリンク付きの目次（&lt;ul&gt;リスト）を動的に生成してください。各見出しには、リンク先となるユニークなidを自動で付与してください。
+   * スクロールアニメーション: IntersectionObserver APIを利用し、主要なセクションや見出しがビューポートに入った際に、フワッと表示される（フェードインする）アニメーションを実装してください。
+   * 「トップへ戻る」ボタン: ページがある程度（例: 1画面分）スクロールされたら、画面の右下に「トップへ戻る」ボタンをフェードインで表示してください。このボタンをクリックすると、ページの最上部へスムーズスクロール（behavior: 'smooth'）で移動するように実装してください。
+ * 品質とアクセシビリティ:
+   * コードコメント: HTML、CSS、JavaScriptの各処理ブロックには、後から他の人が読んでも分かりやすいように、要点を的確にコメントで記述してください。
+   * 絵文字: 記事の雰囲気を高めるために、見出しやリストの項目などに絵文字を効果的かつ控えめに使用してください。
+   * アクセシビリティ: alt属性の適切な設定、aria-labelの使用、キーボードでの操作性など、基本的なWebアクセシビリティに配慮してください。
+<br><br>【ブログ記事本文】
+
+
+
+<br><br>① 単一のブログ記事ページ用プロンプト（index.html）<br><br>
 
 あなたはフロントエンド実装に厳密なエンジニアです。以下の条件で、完成した index.html のみを出力してください。<br><br>
 
-【サイト構成・前提】
+【サイト構成・前提】<br>
 - 既に /ai-comparison-test-site/header.html と /ai-comparison-test-site/style.css が用意済み。
 - ヘッダーは header.html をフェッチして &lt;div id="header-mount"&gt;&lt;/div&gt; に挿入する（サーバーサイドInclude不可、GitHub Pages前提）。
 - 追加のCSSは原則禁止。必要最小限のインラインCSSのみ可（20行以内）。外部フレームワーク不可。
 - すでに style.css に .site-header（固定ヘッダー）、.header-container、.logo、.main-nav、.project-list、.project-card などが存在する。<br><br>
 
-【ページ要件】
+【ページ要件】<br>
 - 完成した index.html をUTF-8で、DOCTYPEから閉じタグまでフルで書くこと。
 - &lt;head&gt; 内で /ai-comparison-test-site/style.css を1回だけ読み込むこと（重複禁止）。
 - &lt;body&gt; の最上部に &lt;div id="header-mount"&gt;&lt;/div&gt; を置き、JSで header.html の &lt;header&gt; 内部だけを抽出して挿入すること。
@@ -25,16 +81,16 @@
 - すべてのJS/CSS/HTMLに要点コメントを入れる。
 - Google Analyticsは header.html 内に既にあるため index.html 側では追加しない（重複禁止）。<br><br>
 
-【実装詳細（重要）】
+【実装詳細（重要）】<br>
 - ヘッダーの読み込みは fetch('/ai-comparison-test-site/header.html') → テキスト取得 → DOMParserでパース → &lt;header&gt;要素の中身を #header-mount に挿入。
 - 見出しへは id を自動付与（日本語可、空白はハイフンに置換）。
 - スムーススクロールは scrollIntoView({behavior:'smooth'}) を使用。
 - CSSの追加が必要なら、インライン&lt;style&gt;を20行以内で記述（フェードイン用クラスなど最小限）。<br><br>
 
-【ページタイトル】
+【ページタイトル】<br>
 - 記事内容から日本語で自然なタイトルを設定。<br><br>
 
-【ブログ記事本文（これをHTML化）】
+【ブログ記事本文（これをHTML化）】<br>
 &lt;&lt;&lt;ここに元記事の本文テキストを貼り付け&gt;&gt;&gt;<br><br>
 
 以上を満たす「完成した index.html」だけを出力してください。<br><br>
@@ -47,12 +103,12 @@
 
 あなたはフロントエンド実装に厳密なエンジニアです。以下の条件で、完成した index.html（記事一覧ページ）だけを出力してください。<br><br>
 
-【サイト構成・前提】
+【サイト構成・前提】<br>
 - /ai-comparison-test-site/header.html と /ai-comparison-test-site/style.css が既にある。
 - ヘッダーは header.html をフェッチして &lt;div id="header-mount"&gt;&lt;/div&gt; に挿入（GitHub Pages、SSI不可）。
 - 追加のCSSは禁止（必要最小限のインラインCSSのみ20行以内）。外部フレームワーク不可。<br><br>
 
-【ページ要件】
+【ページ要件】<br>
 - DOCTYPEから閉じタグまでフルの index.html。
 - /ai-comparison-test-site/style.css を &lt;head&gt; で1回だけ読み込む（重複禁止）。
 - 固定ヘッダー考慮。本文は上部余白を確保。
@@ -66,17 +122,17 @@
 - すべてのJSにコメントを入れる。
 - Google Analyticsは header.html にあるため重複禁止。<br><br>
 
-【実装詳細（重要）】
+【実装詳細（重要）】<br>
 - ヘッダー読み込みは fetch('/ai-comparison-test-site/header.html') → DOMParser で &lt;header&gt; を抽出し #header-mount に挿入。
 - 検索は入力の変化で即時フィルタ（toLowerCase、全角半角・カタカナ/ひらがな差は今回は未対応でOK）。
 - ソートはArray.sortで実装。日付は 'YYYY-MM-DD' をDateに変換して比較。
 - カードクリックで記事URLへ遷移（/ai-comparison-test-site/posts/slug/ を想定）。
 - アクセシビリティ：入力にlabel、カードにaria-label、画像があればalt。<br><br>
 
-【ページタイトル】
+【ページタイトル】<br>
 - 「記事一覧 | SmartSideNote」<br><br>
 
-【ダミーデータ（例）】
+【ダミーデータ（例）】<br>
 - title, slug, description, date (YYYY-MM-DD), tags (配列), optional: thumbnail<br><br>
 
 以上を満たす「完成した index.html」だけを出力してください。<br><br>
