@@ -1,12 +1,12 @@
-① 単一のブログ記事ページ用プロンプト（index.html）
+① 単一のブログ記事ページ用プロンプト（index.html）<br><br>
 
-あなたはフロントエンド実装に厳密なエンジニアです。以下の条件で、完成した index.html のみを出力してください。
+あなたはフロントエンド実装に厳密なエンジニアです。以下の条件で、完成した index.html のみを出力してください。<br><br>
 
 【サイト構成・前提】
 - 既に /ai-comparison-test-site/header.html と /ai-comparison-test-site/style.css が用意済み。
 - ヘッダーは header.html をフェッチして &lt;div id="header-mount"&gt;&lt;/div&gt; に挿入する（サーバーサイドInclude不可、GitHub Pages前提）。
 - 追加のCSSは原則禁止。必要最小限のインラインCSSのみ可（20行以内）。外部フレームワーク不可。
-- すでに style.css に .site-header（固定ヘッダー）、.header-container、.logo、.main-nav、.project-list、.project-card などが存在する。
+- すでに style.css に .site-header（固定ヘッダー）、.header-container、.logo、.main-nav、.project-list、.project-card などが存在する。<br><br>
 
 【ページ要件】
 - 完成した index.html をUTF-8で、DOCTYPEから閉じタグまでフルで書くこと。
@@ -23,34 +23,34 @@
 - アクセシビリティ配慮（aria-label、alt、コントラスト、フォーカス可能要素）。
 - 絵文字は控えめに要所で使用。
 - すべてのJS/CSS/HTMLに要点コメントを入れる。
-- Google Analyticsは header.html 内に既にあるため index.html 側では追加しない（重複禁止）。
+- Google Analyticsは header.html 内に既にあるため index.html 側では追加しない（重複禁止）。<br><br>
 
 【実装詳細（重要）】
 - ヘッダーの読み込みは fetch('/ai-comparison-test-site/header.html') → テキスト取得 → DOMParserでパース → &lt;header&gt;要素の中身を #header-mount に挿入。
 - 見出しへは id を自動付与（日本語可、空白はハイフンに置換）。
 - スムーススクロールは scrollIntoView({behavior:'smooth'}) を使用。
-- CSSの追加が必要なら、インライン&lt;style&gt;を20行以内で記述（フェードイン用クラスなど最小限）。
+- CSSの追加が必要なら、インライン&lt;style&gt;を20行以内で記述（フェードイン用クラスなど最小限）。<br><br>
 
 【ページタイトル】
-- 記事内容から日本語で自然なタイトルを設定。
+- 記事内容から日本語で自然なタイトルを設定。<br><br>
 
 【ブログ記事本文（これをHTML化）】
-&lt;&lt;&lt;ここに元記事の本文テキストを貼り付け&gt;&gt;&gt;
+&lt;&lt;&lt;ここに元記事の本文テキストを貼り付け&gt;&gt;&gt;<br><br>
 
-以上を満たす「完成した index.html」だけを出力してください。
+以上を満たす「完成した index.html」だけを出力してください。<br><br>
 
-ーーー
+---<br><br>
 
-② 記事一覧（カードグリッド）ページ用プロンプト（index.html）
+② 記事一覧（カードグリッド）ページ用プロンプト（index.html）<br><br>
 
-※あなたのstyle.cssには .project-list / .project-card が既にあるので、それを活かす版。
+※あなたのstyle.cssには .project-list / .project-card が既にあるので、それを活かす版。<br><br>
 
-あなたはフロントエンド実装に厳密なエンジニアです。以下の条件で、完成した index.html（記事一覧ページ）だけを出力してください。
+あなたはフロントエンド実装に厳密なエンジニアです。以下の条件で、完成した index.html（記事一覧ページ）だけを出力してください。<br><br>
 
 【サイト構成・前提】
 - /ai-comparison-test-site/header.html と /ai-comparison-test-site/style.css が既にある。
 - ヘッダーは header.html をフェッチして &lt;div id="header-mount"&gt;&lt;/div&gt; に挿入（GitHub Pages、SSI不可）。
-- 追加のCSSは禁止（必要最小限のインラインCSSのみ20行以内）。外部フレームワーク不可。
+- 追加のCSSは禁止（必要最小限のインラインCSSのみ20行以内）。外部フレームワーク不可。<br><br>
 
 【ページ要件】
 - DOCTYPEから閉じタグまでフルの index.html。
@@ -64,20 +64,20 @@
 - IntersectionObserverでカードのフェードイン。カードhoverで持ち上がり（既存CSSの transform を活用）。
 - 右下に「トップへ戻る」ボタン。
 - すべてのJSにコメントを入れる。
-- Google Analyticsは header.html にあるため重複禁止。
+- Google Analyticsは header.html にあるため重複禁止。<br><br>
 
 【実装詳細（重要）】
 - ヘッダー読み込みは fetch('/ai-comparison-test-site/header.html') → DOMParser で &lt;header&gt; を抽出し #header-mount に挿入。
 - 検索は入力の変化で即時フィルタ（toLowerCase、全角半角・カタカナ/ひらがな差は今回は未対応でOK）。
 - ソートはArray.sortで実装。日付は 'YYYY-MM-DD' をDateに変換して比較。
 - カードクリックで記事URLへ遷移（/ai-comparison-test-site/posts/slug/ を想定）。
-- アクセシビリティ：入力にlabel、カードにaria-label、画像があればalt。
+- アクセシビリティ：入力にlabel、カードにaria-label、画像があればalt。<br><br>
 
 【ページタイトル】
-- 「記事一覧 | SmartSideNote」
+- 「記事一覧 | SmartSideNote」<br><br>
 
 【ダミーデータ（例）】
-- title, slug, description, date (YYYY-MM-DD), tags (配列), optional: thumbnail
+- title, slug, description, date (YYYY-MM-DD), tags (配列), optional: thumbnail<br><br>
 
-以上を満たす「完成した index.html」だけを出力してください。
+以上を満たす「完成した index.html」だけを出力してください。<br><br>
 
