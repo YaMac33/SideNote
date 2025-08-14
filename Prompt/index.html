@@ -58,30 +58,7 @@
 - 固定ヘッダー考慮。本文は上部余白を確保。
 - メインに<h1>と、.project-list（CSSのグリッドを流用）を持つカード一覧を配置。
 - 各カード（.project-card）は a要素で全体クリック可能、タイトル（h3）、説明（p）、投稿日（time datetime属性付き）、タグ（ul/li）を含む。
-- 10〜30件のダミーデータをJSの配列から生成し、DOMで .project-list に差し込む方式にする（将来JSON差し替え想定）。
-- フィルタ/検索UIを上部に設置（入力でタイトル・タグに対して絞り込み）。
-- 並び替えのセレクタを用意（新着順/古い順/タイトルA→Z）。
-- IntersectionObserverでカードのフェードイン。カードhoverで持ち上がり（既存CSSの transform を活用）。
-- 右下に「トップへ戻る」ボタン。
-- すべてのJSにコメントを入れる。
-- Google Analyticsは header.html にあるため重複禁止。
-
-【実装詳細（重要）】
-- ヘッダー読み込みは fetch('/ai-comparison-test-site/header.html') → DOMParser で <header> を抽出し #header-mount に挿入。
-- 検索は入力の変化で即時フィルタ（toLowerCase、全角半角・カタカナ/ひらがな差は今回は未対応でOK）。
-- ソートはArray.sortで実装。日付は 'YYYY-MM-DD' をDateに変換して比較。
-- カードクリックで記事URLへ遷移（/ai-comparison-test-site/posts/slug/ を想定）。
-- アクセシビリティ：入力にlabel、カードにaria-label、画像があればalt。
-
-【ページタイトル】
-- 「記事一覧 | SmartSideNote」
-
-【ダミーデータ（例）】
-- title, slug, description, date (YYYY-MM-DD), tags (配列), optional: thumbnail
-
-以上を満たす「完成した index.html」だけを出力してください。
-
-
+- 10〜30件のダミーデータをJSの配列から生成し、DOMで .project-
 
 
 <!DOCTYPE html>
