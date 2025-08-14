@@ -1,8 +1,138 @@
 <!DOCTYPE html>
-<html lang="ja" class="scroll-smooth">
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>メッセージ送信ページ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* ページ全体のスタイル */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            line-height: 1.6;
+        }
 
+        /* ヘッダーのスタイル */
+        header {
+            background-color: #007BFF;
+            color: white;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* メインコンテンツのコンテナ */
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* 各セクションのスタイル */
+        section {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        section:last-child {
+            border-bottom: none;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: #0056b3;
+            border-bottom: 2px solid #007BFF;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* Googleフォームの埋め込みスタイル */
+        iframe {
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            height: 500px; /* 高さを調整 */
+        }
+
+        /* ボタンのスタイル */
+        .button-link {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        .button-link:hover {
+            background-color: #218838;
+        }
+
+        /* フッターのスタイル */
+        footer {
+            text-align: center;
+            color: #6c757d;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        /* === ここからアニメーション用のスタイルを追加 === */
+        
+        /* アニメーションの対象要素の初期状態 */
+        .fade-in {
+            opacity: 0; /* 最初は透明 */
+            transform: translateY(20px); /* 少し下に配置 */
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out; /* 0.8秒かけてアニメーション */
+        }
+
+        /* 画面内に入ったときに適用されるスタイル */
+        .fade-in.visible {
+            opacity: 1; /* 不透明にする */
+            transform: translateY(0); /* 元の位置に戻す */
+        }
+
+    </style>
+</head>
 <body>
-1.以下に関連する記事やニュースなどを5つ挙げて。<br><br>
+
+    <header class="fade-in">
+        <h1>メッセージ送信</h1>
+    </header>
+
+    <main class="fade-in">
+        <section>
+            <h2>Googleフォームでメッセージを送信 📝</h2>
+            <p>
+                下のフォームに入力すると、指定したGoogleアカウントのGoogleスプレッドシートに内容が自動で記録されます。
+                誰でも手軽にメッセージを送ることができます。
+            </p>
+            <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScwUIh_kH0tLiywJ3_eXRzYEQxYD8rTm65xYnLvmIdPur9vmg/viewform?embedded=true" width="640" height="510" frameborder="0" marginheight="0" marginwidth="0">読み込んでいます…</iframe>
+        </section>
+    </main>
+
+    <footer class="fade-in">
+        <p>&copy; 2025 Your Name</p>
+    </footer>
+
+</body>
+</html><br><br>
 
 2.以下の内容をもとに、日本語でブログ記事を書いてください。
 
@@ -82,7 +212,7 @@
 - ヘッダーの読み込みは fetch('/ai-comparison-test-site/header.html') → テキスト取得 → DOMParserでパース → <header>要素の中身を #header-mount に挿入。
 - 見出しへは id を自動付与（日本語可、空白はハイフンに置換）。
 - スムーススクロールは scrollIntoView({behavior:'smooth'}) を使用。
-- CSSの追加が必要なら、インライン<style>を20行以内で記述（フェードイン用クラスなど最小限）。
+- CSSの追加が必要なら、インライン<style>style</style>を20行以内で記述（フェードイン用クラスなど最小限）。
 
 【ページタイトル】
 - 記事内容から日本語で自然なタイトルを設定。<br><br>
