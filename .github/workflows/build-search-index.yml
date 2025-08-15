@@ -1,0 +1,37 @@
+name: Build Search Index
+
+# mainブランチにpushされた時にこのアクションを実行する
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. リポジトリのコードをチェックアウトする
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Node.js環境をセットアップする
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Node.jsのバージョンを指定
+
+      # 3. 必要なライブラリ（cheerio, glob）をインストールする
+      - name: Install dependencies
+        run: npm install cheerio glob
+
+      # 4. JSON生成スクリプトを実行する
+      - name: Run script to generate search-index.json
+        run: node ./scripts/create-index.js # スクリプトのパスを正しく指定
+
+      # 5. 変更があった場合、自動でコミット＆プッシュする
+      - name: Commit and push if changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'docs: search-index.jsonを自動更新'
+          file_pattern: 'search-index.json' # このファイルに変更があった場合のみコミット
