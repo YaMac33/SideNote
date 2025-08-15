@@ -29,6 +29,12 @@ jobs:
       - name: Run script to generate search-index.json
         run: node ./scripts/create-index.js # スクリプトのパスを正しく指定
 
+        # ↓↓↓↓↓↓ この3行をデバッグのために追加 ↓↓↓↓↓↓
+      - name: List files to check index.json
+        run: |
+          ls -l
+      # ↑↑↑↑↑↑ この3行をデバッグのために追加 ↑↑↑↑↑↑
+
       # 5. 変更があった場合、自動でコミット＆プッシュする
       - name: Commit and push if changed
         uses: stefanzweifel/git-auto-commit-action@v5
