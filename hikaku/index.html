@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IBMデータ資格比較：データサイエンティストとデータアナリスト、どちらを選ぶ？</title>
+    <link rel="stylesheet" href="/ai-comparison-test-site/style.css">
+    <style>
+        /* スクロールアニメーション用 */
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+            will-change: opacity, transform;
+        }
+        .is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* トップへ戻るボタン用 */
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            padding: 12px 16px;
+            border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            transform: translateY(20px);
+        }
+        #back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-mount"></div>
+
+    <main class="site-main">
+        <article class="fade-in-section">
+            <h1 class="fade-in-section">IBMデータ資格比較：データサイエンティストとデータアナリスト、どちらを選ぶ？</h1>
+            <p>IBMが提供する「Data Science Professional Certificate」と「Data Analyst Professional Certificate」は、どちらもデータ関連のキャリアを目指す人向けのオンライン講座ですが、目的と学習内容に明確な違いがあります。</p>
+            <p>このページでは、それぞれのコースの主な特徴と、どのような人に適しているかを比較します。あなたのキャリアパスに最適な選択肢を見つける手助けとなれば幸いです。😊</p>
+
+            <div id="toc-container"></div>
+            
+            <hr>
+
+            <section class="fade-in-section">
+                <h2 id="section-1">📊 主な違いの比較</h2>
+                <div class="table-container">
+                    <figure>
+                        <table aria-label="IBMデータサイエンスとデータアナリスト資格の主な違いを比較した表">
+                            <thead>
+                                <tr>
+                                    <th>項目</th>
+                                    <th>IBM Data Science Professional Certificate</th>
+                                    <th>IBM Data Analyst Professional Certificate</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>主な目的</td>
+                                    <td>データサイエンティストとしてのキャリアを築く</td>
+                                    <td>データアナリストとしてのキャリアを築く</td>
+                                </tr>
+                                <tr>
+                                    <td>学習の深さ</td>
+                                    <td>より高度な分析、機械学習、予測モデル構築に焦点を当てる</td>
+                                    <td>データ分析の基本、可視化、レポート作成に焦点を当てる</td>
+                                </tr>
+                                <tr>
+                                    <td>主なスキル</td>
+                                    <td>機械学習、ディープラーニング、統計学、Python、SQL、データサイエンス手法</td>
+                                    <td>Excel、SQL、Python、BIツール（IBM Cognos Analyticsなど）、データ可視化</td>
+                                </tr>
+                                <tr>
+                                    <td>対象者</td>
+                                    <td>データ分析の経験があり、より高度なスキルを習得したい人、または数学や統計学に強い関心がある人</td>
+                                    <td>初心者から中級者で、データ分析の基本を幅広く学びたい人</td>
+                                </tr>
+                                <tr>
+                                    <td>期間の目安</td>
+                                    <td>12コース、約4ヶ月（週10時間の場合）</td>
+                                    <td>11コース、約4ヶ月（週10時間の場合）</td>
+                                </tr>
+                                <tr>
+                                    <td>最終課題</td>
+                                    <td>機械学習モデルの構築やデータサイエンスの総合的なプロジェクト</td>
+                                    <td>実践的なデータ分析、可視化、ダッシュボード作成のプロジェクト</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <figcaption>IBMデータサイエンスとデータアナリスト資格の主な違い。</figcaption>
+                    </figure>
+                </div>
+                <p>この表は、両コースの主な特徴を簡潔にまとめたものです。ご自身のキャリア目標に合わせて比較してみてください。より詳細な情報は、各コースの公式ページで確認できます。</p>
+                <blockquote>
+                    <p>この表は、両コースの主な特徴を簡潔にまとめたものです。Google スプレッドシートにエクスポートして詳細を比較することも可能です。</p>
+                </blockquote>
+            </section>
+
+            <hr>
+
+            <section class="fade-in-section">
+                <h2 id="section-2">✨ IBM Data Science Professional Certificate</h2>
+                <p>このコースは、データサイエンティストとしてのキャリアに特化しており、より専門的で技術的なスキルを深く学びます。</p>
+                
+                <h3 id="section-2-1">学習内容</h3>
+                <p>データサイエンスの全体的な手法、PythonとSQLによるデータ操作、統計学、機械学習アルゴリズム（回帰、分類、クラスタリング）、ディープラーニングの基礎などを網羅しています。</p>
+                
+                <h3 id="section-2-2">強み</h3>
+                <p>機械学習モデルの構築や、データの予測分析といった高度なスキルを習得できるため、データサイエンスの分野で専門性を高めたい人に向いています。AIツールや生成AIがデータサイエンスでどのように使われるかについても触れられています。</p>
+            </section>
+
+            <hr>
+
+            <section class="fade-in-section">
+                <h2 id="section-3">💡 IBM Data Analyst Professional Certificate</h2>
+                <p>このコースは、データアナリストの職務に必要とされる実用的なスキルを幅広く習得することに重点を置いています。</p>
+                
+                <h3 id="section-3-1">学習内容</h3>
+                <p>データ分析の基礎、Excelでのデータ操作、SQLによるデータベースからのデータ抽出、Pythonによるデータ分析、BIツール（IBM Cognos Analytics）を使った可視化とダッシュボード作成などを学びます。</p>
+                
+                <h3 id="section-3-2">強み</h3>
+                <p>データのクリーニング、分析、可視化、そしてその結果を他者に伝えるためのスキルに焦点を当てています。実際のビジネス課題を解決するための実践的な能力を身につけたい人に適しています。</p>
+            </section>
+
+            <hr>
+
+            <section class="fade-in-section">
+                <h2 id="section-4">🎯 どちらを選ぶべきか？</h2>
+                <p>自身のキャリア目標とスキルレベルに合わせて選択するのが良いでしょう。</p>
+                
+                <h3 id="section-4-1">「データサイエンス」を選ぶべき人</h3>
+                <ul class="list-with-emoji">
+                    <li>🔢 統計学や数学に強い興味がある。</li>
+                    <li>🤖 機械学習やAIモデルの構築に携わりたい。</li>
+                    <li>📈 将来的に、より高度なデータ分析や予測の仕事に就きたい。</li>
+                </ul>
+                
+                <h3 id="section-4-2">「データアナリスト」を選ぶべき人</h3>
+                <ul class="list-with-emoji">
+                    <li>📚 データ分析のキャリアをこれから始める初心者。</li>
+                    <li>💻 ExcelやSQLといった実務でよく使われるツールを習得したい。</li>
+                    <li>📊 ビジネスの現状分析や課題発見に興味がある。</li>
+                </ul>
+                
+                <p>両方のコースとも、実務に直結するプロジェクトを通じてポートフォリオを構築できる点が共通の強みです。ご自身のキャリア目標とスキルレベルに合わせて選択するのが良いでしょう。</p>
+            </section>
+
+        </article>
+    </main>
+
+    <button id="back-to-top" aria-label="ページのトップへ戻る">⬆️</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ページ全体に適切なパディングを設定し、ヘッダーとの重なりを防ぐ
+            // スタイルはstyle.cssに依存するため、ここではJSで動的なパディングは追加しない
+
+            // --- ヘッダーの動的読み込み ---
+            const headerMountPoint = document.getElementById('header-mount');
+            fetch('/ai-comparison-test-site/header.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    // DOMParserを使ってHTML文字列から<body>の中身だけを抽出
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    const headerContent = doc.body.innerHTML;
+                    if (headerMountPoint) {
+                        headerMountPoint.innerHTML = headerContent;
+                    }
+                })
+                .catch(error => console.error('Error fetching header:', error));
+
+            // --- 目次の自動生成 ---
+            const tocContainer = document.getElementById('toc-container');
+            const headings = document.querySelectorAll('h2, h3');
+            if (headings.length > 0) {
+                const tocList = document.createElement('ul');
+                tocList.id = 'toc-list';
+                tocList.classList.add('fade-in-section'); // 目次自体にもアニメーションを適用
+
+                headings.forEach((heading, index) => {
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    const id = `toc-${heading.tagName.toLowerCase()}-${index}`;
+                    heading.id = id;
+                    link.href = `#${id}`;
+                    link.textContent = heading.textContent;
+                    
+                    // h3を見出しレベルに応じてインデント
+                    if (heading.tagName.toLowerCase() === 'h3') {
+                        listItem.classList.add('toc-h3');
+                    }
+
+                    listItem.appendChild(link);
+                    tocList.appendChild(listItem);
+                });
+                
+                const tocTitle = document.createElement('h2');
+                tocTitle.textContent = '目次';
+                tocTitle.classList.add('fade-in-section');
+
+                tocContainer.appendChild(tocTitle);
+                tocContainer.appendChild(tocList);
+            }
+
+            // --- スクロールアニメーション (IntersectionObserver) ---
+            const fadeInSections = document.querySelectorAll('.fade-in-section');
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            fadeInSections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // --- 「トップへ戻る」ボタン ---
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            // スクロールでボタンの表示/非表示を切り替える
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > window.innerHeight) {
+                    backToTopButton.classList.add('show');
+                } else {
+                    backToTopButton.classList.remove('show');
+                }
+            });
+
+            // クリックでスムーズにトップへスクロール
+            backToTopButton.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
