@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- ページタイトル：記事内容を端的に表現 -->
+  <title>Algolia と Lunr.js で作る静的サイト検索 — 自動化と運用ガイド</title>
+
+  <!-- サイト全体のスタイル（必ず1回だけ） -->
+
+  <link rel="stylesheet" href="/ai-comparison-test-site/style.css" />
+
+  <!-- 必要最小限のインラインCSS（20行以内）: ヘッダー被り回避、レスポンシブ画像、フェード、トップボタン -->
+
+  <style>
+    /* 本文の上部余白はヘッダー高さに合わせてJSで調整 */
+    .content { padding:1.25rem; padding-top:var(--header-height,72px); max-width:980px; margin:0 auto; }
+    figure img{max-width:100%;height:auto;display:block;}
+    .fade-in {opacity:0;transform:translateY(10px);transition:opacity .6s ease, transform .6s ease;}
+    .fade-in.visible{opacity:1;transform:none;}
+    #to-top{position:fixed;right:1rem;bottom:1.25rem;padding:.6rem .8rem;border-radius:.5rem;box-shadow:0 6px 18px rgba(0,0,0,.12);background:#fff;opacity:0;pointer-events:none;transition:opacity .25s;}
+    #to-top.show{opacity:1;pointer-events:auto;}
+  </style>
+
+</head>
+<body>
+  <!-- ヘッダーを動的に読み込むためのマウントポイント -->
+  <div id="header-mount" aria-hidden="true"></div>
+
+  <main id="main" class="content" role="main">
+    <!-- 主見出し（絵文字を控えめに） -->
+    <h1>Algolia と Lunr.js：静的サイト向け検索の導入と自動化ガイド 🔎</h1>
+
+```
+<!-- 目次（JSで自動生成） -->
+<nav id="table-of-contents" aria-label="目次"></nav>
+
+<!-- 記事本体 -->
+<article id="article-body">
+  <!-- Algolia セクション -->
+  <section class="fade-in fade-in-target">
+    <h2>方法B：Algoliaで高機能な検索を実装する ☁️</h2>
+    <p>高速でリアルタイム検索など高度な検索体験を提供したい場合におすすめです。無料プランでも多くの機能が利用できます。</p>
+
+    <h3>ステップ1：Algoliaに登録してインデックスを作成</h3>
+    <p>Algoliaのダッシュボードでアカウントを作成し、新しい <strong>Index（インデックス）</strong>（例：<code>my_website_search</code>）を作成します。</p>
+
+    <h3>ステップ2：検索データをAlgoliaにアップロード</h3>
+    <p>ダッシュボードの「Upload records」で <code>search-index.json</code> をJSON形式でアップロードします。Algoliaでは <code>objectID</code> を推奨します（例を下に示します）。</p>
+
+    <pre><code aria-label="Algolia用JSON例">[
+```
+
+{
+"objectID": 0,
+"url": "/about.html",
+"title": "このサイトについて",
+"content": "このサイトの運営方針や目的について説明しています..."
+}
+]</code></pre>
+
+```
+    <h3>ステップ3：HTMLに検索UIを設置する</h3>
+    <p>Algoliaが提供する InstantSearch.js を使うと簡単に実装できます。参考CDN（例）：</p>
+    <ul>
+      <li>algoliasearch: <a href="https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js">https://cdn.jsdelivr.net/npm/algoliasearch@4/dist/algoliasearch-lite.umd.js</a></li>
+      <li>instantsearch: <a href="https://cdn.jsdelivr.net/npm/instantsearch.js@4">https://cdn.jsdelivr.net/npm/instantsearch.js@4</a></li>
+    </ul>
+
+    <p>HTMLの設置例：</p>
+    <div id="algolia-search-sample" aria-label="Algoliaサンプル">
+      <h4>Algolia検索UIの設置例</h4>
+      <div id="search-container">
+        <div id="searchbox"></div>
+        <div id="hits"></div>
+      </div>
+      <p class="note">※ 実稼働させるには <code>YOUR_APP_ID</code> と <code>YOUR_SEARCH_ONLY_API_KEY</code>、<code>your_index_name</code> を置き換えてください。</p>
+    </div>
+
+    <h3>ステップ4：InstantSearch の初期化（サンプル）</h3>
+    <pre><code aria-label="InstantSearchサンプル">const searchClient = algoliasearch('YOUR_APP_ID','YOUR_SEARCH_ONLY_API_KEY');
+```
+
+const search = instantsearch({ indexName: 'your\_index\_name', searchClient });
+search.addWidgets(\[
+instantsearch.widgets.searchBox({ container: '#searchbox', placeholder: 'サイト内を検索...' }),
+instantsearch.widgets.hits({ container: '#hits', templates: { item: '<a href="{{url}}"><h3>{{title}}</h3><p>{{content}}</p></a>' } })
+]);
+search.start();</code></pre> </section>
+
+```
+  <!-- 自動化（GitHub Actions）セクション -->
+  <section class="fade-in fade-in-target">
+    <h2>search-index.json を自動更新する（GitHub Actions） 🤖</h2>
+    <p>ページ更新ごとに <code>search-index.json</code> を自動生成してコミットするワークフローを作る手順を紹介します。</p>
+
+    <h3>仕組みの概要</h3>
+    <ul>
+      <li>Node.js スクリプトで HTML をパースし、index を生成</li>
+      <li>GitHub Actions が push をトリガーにスクリプトを実行</li>
+      <li>生成された <code>search-index.json</code> を自動でコミット・プッシュ</li>
+    </ul>
+
+    <h3>Node.js スクリプト（概略）</h3>
+    <pre><code aria-label="create-index.jsの例">// glob と cheerio で HTML を巡回して JSON を生成する（抜粋）
+```
+
+const glob = require('glob');
+const cheerio = require('cheerio');
+// ...ファイルを読み、titleや本文を抽出して配列に push
+// 最後に fs.writeFileSync('./search-index.json', JSON.stringify(articles, null, 2));</code></pre>
+
+```
+    <h3>GitHub Actions ワークフロー（重要な権限設定）</h3>
+    <p>Actions がリポジトリへコミットする場合、ワークフローの先頭に <code>permissions: contents: write</code> を追加してください。</p>
+    <pre><code aria-label="workflow例">on:
+```
+
+push:
+branches: \[ main ]
+permissions:
+contents: write
+jobs:
+build: ...</code></pre>
+
+```
+    <p>※ 実行後は GitHub の <strong>Actions</strong> タブでログを確認し、成功（緑）か失敗（赤）かをチェックしてください。</p>
+  </section>
+
+  <!-- Git/Push/認証トラブルシュート -->
+  <section class="fade-in fade-in-target">
+    <h2>GitHub へプッシュできない時の確認ポイント 🔧</h2>
+    <p>よくある原因：</p>
+    <ul>
+      <li>リモート URL の誤り</li>
+      <li>認証情報（トークン）が無効</li>
+      <li>Actions に書き込み権限がない</li>
+    </ul>
+
+    <h3>ローカルからの push が 403 になる場合</h3>
+    <p>GitHub はパスワードの代わりに <strong>Personal Access Token（PAT）</strong> を利用します。新しいトークンを作成し、push 時にユーザー名とトークンを入力してください。</p>
+
+    <h3>Windows で資格情報マネージャーが見つからない場合</h3>
+    <p>「<kbd>Windows</kbd> + <kbd>R</kbd>」で <code>control /name Microsoft.CredentialManager</code> を実行して開くか、下記コマンドで一時的に credential.helper を無効化して直接認証する方法もあります。</p>
+    <pre><code aria-label="gitコマンド例">git config --global --unset credential.helper
+```
+
+git push
+
+# ユーザー名: your-username
+
+# パスワード: (PAT を貼り付け)
+
+git config --global credential.helper manager</code></pre> </section>
+
+```
+  <!-- まとめ -->
+  <section class="fade-in fade-in-target">
+    <h2>まとめ ✅</h2>
+    <p>Lunr.js（完全自己完結型）は小〜中規模サイトに最適、Algolia（外部サービス）は大規模・高機能向け。search-index.json の自動化は GitHub Actions と簡単なスクリプトで実現できます。</p>
+    <blockquote>
+      <p>必要なら、Lunr.js を使った検索UIのサンプル実装（ブラウザで動く）も同じページに設置できます。ご希望ならそのコードを反映します。</p>
+    </blockquote>
+  </section>
+</article>
+```
+
+  </main>
+
+  <!-- トップへ戻るボタン（キーボード操作対応、aria-label付与） -->
+
+<button id="to-top" aria-label="ページの先頭へ戻る">↑ トップへ戻る</button>
+
+  <!-- JavaScript：ヘッダー読み込み、目次生成、IntersectionObserver、トップへ戻る等（要点をコメント） -->
+
+  <script>
+    /* ============================================================
+       ヘッダーの動的読み込み
+       - fetch + DOMParser を使い /ai-comparison-test-site/header.html を取得
+       - header 内の主要ノードを #header-mount に挿入
+       - 挿入後に高さを計測して CSS 変数 --header-height を設定（固定ヘッダー対策）
+    ============================================================ */
+    (async function loadHeader(){
+      try {
+        const mount = document.getElementById('header-mount');
+        const res = await fetch('/ai-comparison-test-site/header.html', {cache:'no-cache'});
+        if(!res.ok) throw new Error('header fetch failed');
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        // 優先して .site-header、次に body の中身を使用
+        const candidate = doc.querySelector('.site-header') || doc.body;
+        // 既存子をクリアしてから挿入
+        while(mount.firstChild) mount.removeChild(mount.firstChild);
+        Array.from(candidate.childNodes).forEach(n => mount.appendChild(n.cloneNode(true)));
+        // 高さを設定（少し余裕を含める）
+        requestAnimationFrame(()=>{
+          const el = mount.firstElementChild || mount;
+          const h = Math.ceil(el.getBoundingClientRect().height) + 8;
+          document.documentElement.style.setProperty('--header-height', h + 'px');
+          mount.setAttribute('aria-hidden','false');
+        });
+      } catch (e) {
+        console.error('ヘッダー読み込みエラー:', e);
+      }
+    })();
+
+    /* ============================================================
+       目次（TOC）自動生成
+       - article 内の h2,h3 を抽出
+       - 各見出しにユニークIDを付与（スラッグ化＋重複回避）
+       - h1 の直後に TOC を挿入
+    ============================================================ */
+    (function buildTOC(){
+      function slugify(s){
+        return s.toString().toLowerCase().trim()
+          .replace(/[^\w\u3040-\u30ff\u4e00-\u9fff\- ]+/g,'')
+          .replace(/\s+/g,'-').replace(/\-+/g,'-');
+      }
+      const article = document.getElementById('article-body');
+      if(!article) return;
+      const headings = article.querySelectorAll('h2,h3');
+      if(headings.length === 0) return;
+      const ul = document.createElement('ul');
+      ul.className = 'toc-list';
+      const used = new Set();
+      headings.forEach(h=>{
+        if(!h.id){
+          let base = slugify(h.textContent || 'heading');
+          let id = base;
+          let i = 1;
+          while(used.has(id) || document.getElementById(id)){
+            id = base + '-' + i++;
+          }
+          used.add(id);
+          h.id = id;
+        }
+        const li = document.createElement('li');
+        li.className = 'toc-' + h.tagName.toLowerCase();
+        const a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.textContent = (h.tagName.toLowerCase() === 'h2' ? '■ ' : '– ') + h.textContent;
+        a.setAttribute('aria-label','目次: '+h.textContent);
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      // TOC を h1 の直後に挿入
+      const h1 = document.querySelector('h1');
+      const wrapper = document.createElement('nav');
+      wrapper.id = 'toc';
+      wrapper.setAttribute('aria-label','ページ内目次');
+      wrapper.className = 'fade-in fade-in-target';
+      const title = document.createElement('p');
+      title.textContent = '目次（クリックで移動）';
+      wrapper.appendChild(title);
+      wrapper.appendChild(ul);
+      if(h1 && h1.parentNode) h1.insertAdjacentElement('afterend', wrapper);
+      else document.getElementById('table-of-contents').appendChild(wrapper);
+    })();
+
+    /* ============================================================
+       スクロールアニメーション（IntersectionObserver）
+       - .fade-in-target を監視し、ビューポートに入ったら .visible を付与
+       - 一度表示したら unobserve して無駄な処理を減らす
+    ============================================================ */
+    (function initFadeIn(){
+      const targets = document.querySelectorAll('.fade-in-target');
+      if(!targets.length) return;
+      const io = new IntersectionObserver((entries, obs)=>{
+        entries.forEach(entry=>{
+          if(entry.isIntersecting){
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      }, {threshold: 0.12});
+      targets.forEach(t=>io.observe(t));
+    })();
+
+    /* ============================================================
+       「トップへ戻る」ボタン
+       - 1画面分スクロールしたら右下にフェードイン表示
+       - クリックでスムーススクロール、キーボード操作にも対応
+    ============================================================ */
+    (function initToTop(){
+      const btn = document.getElementById('to-top');
+      if(!btn) return;
+      function check(){
+        if(window.scrollY > window.innerHeight) btn.classList.add('show');
+        else btn.classList.remove('show');
+      }
+      window.addEventListener('scroll', check, {passive:true});
+      window.addEventListener('resize', check);
+      check();
+      btn.addEventListener('click', ()=>{ window.scrollTo({top:0,behavior:'smooth'}); btn.blur(); });
+      btn.addEventListener('keydown', e=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); btn.click(); }});
+    })();
+
+    /* ============================================================
+       ハッシュリンククリック時のオフセット補正（固定ヘッダー対策）
+       - ページ内リンクで遷移した際にヘッダーで隠れないようスクロール調整
+    ============================================================ */
+    (function adjustHashOffset(){
+      function offsetToHash(){
+        if(location.hash){
+          const el = document.getElementById(location.hash.slice(1));
+          if(el){
+            const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-height')) || 72;
+            const rect = el.getBoundingClientRect();
+            const top = window.scrollY + rect.top - headerH - 12;
+            window.scrollTo({top, behavior:'smooth'});
+          }
+        }
+      }
+      window.addEventListener('load', ()=>setTimeout(offsetToHash, 80));
+      document.addEventListener('click', e=>{
+        const a = e.target.closest('a[href^="#"]');
+        if(a) setTimeout(offsetToHash, 10);
+      });
+    })();
+  </script>
+
+</body>
+</html>
