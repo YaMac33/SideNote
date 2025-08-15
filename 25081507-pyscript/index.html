@@ -1,0 +1,311 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>JavaScript と Node.js — 同じ言語が生む強みとブラウザでの Python 利用</title>
+
+
+  <!-- サイト全体のスタイル（既存ファイルを1回だけ読み込む） -->
+
+
+  <link rel="stylesheet" href="/ai-comparison-test-site/style.css" />
+
+
+  <!-- 必要最低限のインラインCSS（20行以内） -->
+
+
+  <style>
+    /* ヘッダー固定に対応するための余白確保 */
+    main { padding-top: 84px; /* header の高さ想定に合わせる（必要に応じ調整） */ }
+    /* フェードイン用初期スタイル */
+    .fade-in { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    /* トップへ戻るボタンの基本スタイル */
+    #back-to-top { position: fixed; right: 20px; bottom: 24px; display: grid; place-items:center; padding: .6rem .8rem; border-radius: 8px; box-shadow: 0 6px 18px rgba(0,0,0,.12); cursor: pointer; opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+    #back-to-top.show { opacity: 1; pointer-events: auto; }
+  </style>
+
+
+</head>
+<body>
+  <!-- ヘッダーを動的に読み込み（#header-mountに挿入） -->
+  <div id="header-mount" aria-hidden="true"></div>
+
+
+  <main id="content" class="container">
+    <!-- 記事の大見出し -->
+    <article class="post" aria-labelledby="post-title">
+      <header>
+        <h1 id="post-title">JavaScript と Node.js：同じ言語だからできること、ブラウザで動く Python のいま 🚀</h1>
+        <!-- 目次は JavaScript によって自動生成され、ここに挿入される -->
+        <nav id="auto-toc" aria-label="目次" class="toc fade-in" role="navigation"></nav>
+      </header>
+
+
+  <!-- 記事本文。各セクションに fade-in を付与してアニメーションの対象にする -->
+  <section class="post-section fade-in">
+    <p>Javascript と Node.js は共に <strong>同じ言語（JavaScript）</strong> を使っていますが、この「同じ言語」であることが生む独特のメリットや、逆に限界・注意点があります。本稿ではその特徴をわかりやすく整理します。</p>
+  </section>
+
+  <section class="post-section" aria-labelledby="sharing-code" >
+    <h2 id="sharing-code">📝 コードの共有（アイソモーフィック／ユニバーサル JavaScript）</h2>
+    <p class="fade-in">これが最大の特長です。フロントエンド（ブラウザ）とバックエンド（サーバー）で同じバリデーションやユーティリティを再利用できます。</p>
+
+    <h3>具体例：入力バリデーションの共有</h3>
+    <p class="fade-in">フォームの入力チェックをブラウザ側とサーバー側で同じコードにできるので、<strong>開発効率の向上・バグの削減・メンテナンス性の向上</strong>が期待できます。</p>
+
+    <ul class="fade-in" aria-label="共有のメリット">
+      <li>開発効率が上がる</li>
+      <li>バグが起きにくい</li>
+      <li>修正箇所が一箇所で済む</li>
+    </ul>
+  </section>
+
+  <section class="post-section" aria-labelledby="ssr-csr">
+    <h2 id="ssr-csr">🚀 SSR と CSR の両立（高速表示とリッチな体験）</h2>
+    <p class="fade-in">Node.js を使えばサーバーサイドレンダリング（SSR）を行い、初期表示を速くできます。その後はクライアント側の JavaScript（CSR）でリッチな操作を担当する、といった「良いとこ取り」が容易です。Next.js や Nuxt.js といったフレームワークはこの連携をシームレスにします。</p>
+  </section>
+
+  <section class="post-section" aria-labelledby="other-benefits">
+    <h2 id="other-benefits">✨ その他の重要なメリット</h2>
+
+    <ul class="fade-in" aria-label="その他のメリット">
+      <li><strong>JSONとの親和性</strong> — データのシリアライズ/デシリアライズがほぼそのまま扱える。</li>
+      <li><strong>開発者体験の統一</strong> — フルスタック開発のハードルが下がる。</li>
+      <li><strong>リアルタイム通信</strong> — WebSocket を使ったチャットやゲームが作りやすい。</li>
+    </ul>
+
+    <p class="fade-in">厳密には「この2つでしか絶対にできない」ことは少ないですが、効率性・一貫性の面で大きな利点があります。</p>
+  </section>
+
+  <section class="post-section" aria-labelledby="python-frontend">
+    <h2 id="python-frontend">フロントエンドに Python が組み込まれるのか？ 🐍</h2>
+
+    <p class="fade-in">結論として「ブラウザで直接 Python を動かす技術は存在するが、JavaScript を完全に置き換える可能性は低い」です。以下で理由と現状を説明します。</p>
+
+    <h3>なぜブラウザは標準で Python を動かさないのか</h3>
+    <p class="fade-in">ブラウザは長年 JavaScript を標準実行言語として採用しており、各ブラウザベンダーが Python 実行エンジンを同時に標準搭載するのは現実的に困難です。</p>
+
+    <h3>WebAssembly（Wasm）を利用したアプローチ</h3>
+    <p class="fade-in">Wasm により、Python 実行環境（Pyodide 等）をブラウザ上にロードして実行するプロジェクトが活発です。代表例として <strong>PyScript / Pyodide</strong> があります。</p>
+
+    <figure class="fade-in" aria-hidden="false">
+      <!-- 記事内に画像URLは無かったため、サンプルの説明図は挿入しません。代わりにキャプションで補足。 -->
+      <figcaption>※PyScript はブラウザ内に Python 実行環境を持ち込み、ブラウザ上で Python を実行します。</figcaption>
+    </figure>
+
+    <p class="fade-in">短所として、初回読み込みで実行環境（Wasm バンドル）をダウンロードするため時間がかかる点や、軽い UI 操作は JavaScript の方が手軽で高速という点があります。</p>
+  </section>
+
+  <section class="post-section" aria-labelledby="gh-pages-pyscript">
+    <h2 id="gh-pages-pyscript">GitHub Pages（静的ホスティング）でも Python は動く？ ✅</h2>
+
+    <p class="fade-in">はい、可能です。重要なのは「Python がサーバーで実行されるのではなく、ユーザーのブラウザで実行される」点です。GitHub Pages はファイルをそのまま配信し、ブラウザ側で PyScript を読み込めば Python が動きます。</p>
+
+    <h3>動作の流れ（簡略）</h3>
+    <ol class="fade-in" aria-label="PyScriptの動作流れ">
+      <li>ユーザーがページをリクエスト → GitHub Pages が index.html を配信</li>
+      <li>ブラウザが PyScript のスクリプトをダウンロード</li>
+      <li>ブラウザ内に WebAssembly ベースの Python 実行環境が構築される</li>
+      <li>&lt;py-script&gt; 内の Python コードが実行される</li>
+    </ol>
+
+    <p class="fade-in">この仕組みを使えば、データ分析用のライブラリ（Pandas / NumPy 等）をブラウザ上で動かすことも可能です。ただしファイルサイズや初回ロード時間を考慮する必要があります。</p>
+
+    <p class="fade-in">参考：PyScript の例（HTML に以下のように書くと動きます）</p>
+    <pre class="fade-in" aria-hidden="false"><code>&lt;link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css"&gt;
+
+<script defer src=“https://pyscript.net/latest/pyscript.js”></script>
+
+<py-script>
+import pandas as pd
+df = pd.DataFrame({‘col1’:[1,2]})
+print(df)
+</py-script>
+
+
+    <p class="fade-in">（上記のようなコードは GitHub Pages 上でも動きます — 実行はユーザーのブラウザ内で行われます。）</p>
+  </section>
+
+  <section class="post-section" aria-labelledby="conclusion">
+    <h2 id="conclusion">まとめ ✅</h2>
+    <p class="fade-in">JavaScript と Node.js の組み合わせは、同一言語だからこそ得られる開発効率と一貫性が最大の強みです。一方、Python をフロントエンドで動かす技術（PyScript 等）は成長中であり、特定用途（データ可視化や教育）で非常に有用です。</p>
+
+    <blockquote class="fade-in" aria-hidden="false">
+      「Python はフロントエンドの主役にはならないが、特定タスクの"強力な助っ人"になる」 — が現状の最も適切な見立てです。
+    </blockquote>
+
+    <p class="fade-in">ご質問や具体例のコード（バリデーション共有の実装例など）があれば、続けてお手伝いできます！</p>
+  </section>
+</article>
+
+  </main>
+
+
+  <!-- トップへ戻るボタン（キーボードアクセス可能） -->
+
+
+⬆ Top
+
+  <!-- JavaScript：ヘッダー読み込み、目次生成、IntersectionObserver、トップへ戻る -->
+
+
+  <script>
+    /* -------------------------------------------
+       ヘッダーの動的読み込み
+       fetch で header.html を取得し、DOMParser で中身のみ挿入する
+    --------------------------------------------*/
+    (function loadHeader(){
+      const mount = document.getElementById('header-mount');
+      if (!mount) return;
+      fetch('/ai-comparison-test-site/header.html', {cache: "no-store"})
+        .then(resp => {
+          if (!resp.ok) throw new Error('ヘッダー取得失敗');
+          return resp.text();
+        })
+        .then(htmlText => {
+          // DOMParser で HTML を解析し、body の中身（またはルートの子要素）を抽出
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlText, 'text/html');
+          // header.html に <body> がある場合はその中身を使う。なければ documentElement の子を入れる
+          let nodes = doc.body && doc.body.children.length ? Array.from(doc.body.children) : Array.from(doc.documentElement.children);
+          // 挿入前に mount を空にしてから追加
+          mount.innerHTML = '';
+          nodes.forEach(n => mount.appendChild(document.importNode(n, true)));
+          // ヘッダーが読み込まれたら、アクセシビリティのために aria-hidden を解除
+          mount.setAttribute('aria-hidden','false');
+        })
+        .catch(err => {
+          console.error('header load error:', err);
+          // フォールバックとして簡易的なヘッダーを表示
+          mount.innerHTML = '<header class="site-header"><div class="header-container"><a href="/" aria-label="ホーム">サイト</a></div></header>';
+          mount.setAttribute('aria-hidden','false');
+        });
+    })();
+
+    /* -------------------------------------------
+       目次（TOC）の自動生成
+       ページ内の h2 / h3 を抽出してアンカー付き TOC を生成
+    --------------------------------------------*/
+    (function generateTOC(){
+      // 実行タイミング：DOMContentLoaded 後
+      document.addEventListener('DOMContentLoaded', () => {
+        const tocContainer = document.getElementById('auto-toc');
+        if (!tocContainer) return;
+        // 対象見出しを取得
+        const content = document.querySelector('article.post');
+        if (!content) return;
+        const headings = content.querySelectorAll('h2, h3');
+        if (!headings.length) {
+          tocContainer.style.display = 'none';
+          return;
+        }
+
+        const ul = document.createElement('ul');
+        ul.className = 'toc-list';
+        // ユニークID生成の補助
+        const slugify = (str) => str.toLowerCase().trim().replace(/[^\w\- ]+/g,'').replace(/\s+/g,'-');
+
+        headings.forEach(h => {
+          // すでに id があればそのまま、なければユニーク id を付与
+          if (!h.id) {
+            const base = slugify(h.textContent || 'heading');
+            let id = base;
+            let idx = 1;
+            while (document.getElementById(id)) { id = base + '-' + (++idx); }
+            h.id = id;
+          }
+          // li の深さは h2=1, h3=2 として適切にインデント
+          const li = document.createElement('li');
+          li.className = (h.tagName.toLowerCase() === 'h3') ? 'toc-h3' : 'toc-h2';
+
+          const a = document.createElement('a');
+          a.href = '#' + h.id;
+          a.textContent = (h.tagName.toLowerCase() === 'h3' ? '↳ ' : '') + h.textContent;
+          a.setAttribute('data-target', h.id);
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = document.getElementById(h.id);
+            if (target) {
+              // ページ内リンクはスムーズスクロール
+              target.scrollIntoView({behavior: 'smooth', block: 'start'});
+              // フォーカスを移してキーボード利用者にも分かるようにする
+              target.setAttribute('tabindex', '-1');
+              target.focus({preventScroll:true});
+            }
+          });
+
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+
+        // 挿入（h1 の直後に表示）
+        tocContainer.appendChild(ul);
+        // TOC 自体をフェードイン対象に
+        tocContainer.classList.add('fade-in');
+      });
+    })();
+
+    /* -------------------------------------------
+       IntersectionObserver を使ったスクロールアニメ（フェードイン）
+       .fade-in 要素がビューポートに入ったら .visible を付与
+    --------------------------------------------*/
+    (function setupScrollAnimations(){
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // 一度表示されたら監視を止めてパフォーマンスを向上
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      // 対象要素を登録
+      document.addEventListener('DOMContentLoaded', () => {
+        const targets = document.querySelectorAll('.fade-in');
+        targets.forEach(t => observer.observe(t));
+      });
+    })();
+
+    /* -------------------------------------------
+       「トップへ戻る」ボタンの表示制御と動作
+       スクロール量が1画面分を超えたら表示
+    --------------------------------------------*/
+    (function backToTop(){
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+
+      // クリックでトップへスムーズスクロール
+      btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+      // キーボード操作でもアクセス可能に（Enter / Space）
+      btn.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+
+      const showWhenScrolled = () => {
+        const threshold = window.innerHeight || document.documentElement.clientHeight;
+        if (window.scrollY > threshold) {
+          btn.classList.add('show');
+        } else {
+          btn.classList.remove('show');
+        }
+      };
+
+      window.addEventListener('scroll', showWhenScrolled, { passive: true });
+      // 初期判定
+      showWhenScrolled();
+    })();
+  </script>
+
+
+</body>
+</html>
