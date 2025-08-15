@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <!-- ページ全体スタイル（サイト共通）を一度だけ読み込み -->
+  <link rel="stylesheet" href="/ai-comparison-test-site/style.css" />
+  <!-- ページタイトル：記事内容を要約し魅力的に -->
+  <title>静的サイトで実装する「サイト内検索」 — GitHub Pages向け完全ガイド 🔍</title>
+
+  <!-- 最低限のインラインCSS（20行以内）: 固定ヘッダー考慮、フェード用、トップへ戻るボタン等 -->
+  <style>
+    /* 本文がヘッダーに隠れないように上部マージンを確保 */
+    main { padding-top: 6.25rem; /* ヘッダーの高さの想定値（調整可） */ }
+    /* フェードインの初期/表示状態 */
+    .fade-section { opacity: 0; transform: translateY(12px); transition: opacity .6s ease, transform .6s ease; will-change: opacity, transform; }
+    .fade-section.in-view { opacity: 1; transform: translateY(0); }
+    /* トップへ戻るボタンの基本 */
+    #back-to-top { position: fixed; right: 1rem; bottom: 1rem; display:block; padding:.6rem .8rem; border-radius:.5rem; background:#0b74de; color:#fff; text-decoration:none; opacity:0; pointer-events:none; transition: opacity .3s ease; z-index:9999; }
+    #back-to-top.show { opacity: 1; pointer-events:auto; }
+    /* 目次の見やすいスタイル（最小調整） */
+    nav.toc { border-left:4px solid rgba(11,116,222,.12); padding: .6rem 1rem; margin-bottom:1rem; background: rgba(11,116,222,.03); border-radius:.5rem; }
+    nav.toc ul { margin:0; padding-left:1rem; }
+  </style>
+</head>
+<body>
+  <!-- ヘッダーを挿入するためのマウントポイント（fetchで動的読み込み） -->
+  <div id="header-mount" aria-hidden="true"></div>
+
+  <main id="main-content" class="container" role="main">
+    <!-- 記事メタ -->
+    <article class="post">
+      <!-- H1（ページの主見出し） -->
+      <header class="post-header">
+        <h1 class="fade-section">静的サイトでの「サイト内検索」をやさしく解説 🔎</h1>
+        <p class="eyebrow fade-section" aria-hidden="false">GitHub Pages やプレーンな静的サイトでも使える実践的な手順を、例え話と共に。</p>
+      </header>
+
+      <!-- 目次（JSが自動生成して挿入） -->
+      <nav id="auto-toc" class="toc fade-section" aria-label="目次">
+        <!-- 自動生成された目次がここに入ります -->
+        <strong>目次 📚</strong>
+        <div id="toc-list" aria-live="polite"></div>
+      </nav>
+
+      <!-- 記事本文（以下は与えられたブログ記事本文をセマンティックに整形） -->
+      <section class="post-body">
+        <p class="fade-section">以前の内容を、もっと分かりやすいように、例え話を交えながらもう一度ご説明しますね。</p>
+
+        <h2 class="fade-section">そもそも、どうやってサイト内を検索するの？ 🔍</h2>
+        <p class="fade-section">サイト内検索を実装するには、大きく2つの方法があります。</p>
+
+        <h3 class="fade-section">サーバーにお願いする方法 (サーバーサイド検索)</h3>
+        <p class="fade-section">例えるなら：図書館の司書さんに「〇〇についての本を探してください」とお願いする方法です。専門の検索サーバー（Elasticsearchなど）が常に検索準備をして待機しています。高機能ですが設定やコストがかかります。</p>
+
+        <h3 class="fade-section">自分のブラウザで頑張る方法 (ブラウザ側検索)</h3>
+        <p class="fade-section">例えるなら：蔵書リスト（目録カード）を自分の席に持ってきて、自分で探す方法。これが <strong>search-index.json</strong> と Lunr.js のようなライブラリを使う方法です。小〜中規模サイトに最適で費用がかかりません。</p>
+
+        <h2 class="fade-section">検索の2つの材料：「データ」と「検索エンジン」 🧰</h2>
+        <p class="fade-section">ブラウザ側で検索を実装するには、以下2つが必要です。</p>
+
+        <ul class="fade-section">
+          <li>蔵書リスト (search-index.json) — 各ページの <code>url</code>, <code>title</code>, <code>content</code> をまとめたJSON。</li>
+          <li>検索係（JavaScriptライブラリ） — Lunr.js（高速インデックス型）やFuse.js（あいまい検索向き）など。</li>
+        </ul>
+
+        <figure class="fade-section">
+          <!-- 記事内に示されたJSONの例は画像ではないので、コードブロックとして表現 -->
+          <figcaption>search-index.json の例（要約）</figcaption>
+          <pre aria-label="search-index example" style="white-space:pre-wrap;">[
+  {
+    "url": "/blog/post-1/",
+    "title": "最初の記事",
+    "content": "これは最初の記事の本文です..."
+  },
+  {
+    "url": "/blog/post-2/",
+    "title": "二番目の記事",
+    "content": "これは二番目の記事の本文です..."
+  }
+]</pre>
+        </figure>
+
+        <h2 class="fade-section">蔵書リスト(JSON)を自動で作る仕組み 🤖</h2>
+        <p class="fade-section">毎回手動で更新するのは面倒です。そこで <strong>GitHub Actions</strong> を使って、自動で search-index.json を生成するワークフローを設定します。</p>
+
+        <h3 class="fade-section">自動化の具体的な流れ</h3>
+        <ol class="fade-section">
+          <li>あなたが記事を GitHub に push →</li>
+          <li>Actions が起動して Node.js スクリプトを実行 →</li>
+          <li>全HTMLを解析して title と本文を抽出 →</li>
+          <li>search-index.json を作成して commit & push。</li>
+        </ol>
+
+        <blockquote class="fade-section" aria-label="例え話">
+          <p>「執事（GitHub Actions）が目を覚まして、指示書（スクリプト）通りにサイトを読み、蔵書リストを更新してくれる」— そんなイメージです。</p>
+        </blockquote>
+
+        <h2 class="fade-section">具体的な実装方法（要点まとめ） ✅</h2>
+        <ul class="fade-section">
+          <li>方法A：Lunr.js を使う（オフラインで完結、インデックス作成が速い）。</li>
+          <li>方法B：Algolia を使う（外部サービスで高機能。ただし API キー等の設定が必要）。</li>
+        </ul>
+
+        <p class="fade-section">Lunr.js を使う場合の基本的な手順は次のとおりです：</p>
+        <ol class="fade-section">
+          <li>search-index.json を作る（手動 or スクリプト）。</li>
+          <li>ページに検索ボックスと結果エリアを設置。</li>
+          <li>lunr を読み込んでインデックス構築 → 入力に応じて検索実行。</li>
+        </ol>
+
+        <h2 class="fade-section">Jekyllを使わない場合の自動化（Node.js + GitHub Actions）</h2>
+        <p class="fade-section">与えられたサンプルスクリプト（cheerio や glob を使う）を GitHub Actions で実行すれば、push の度に自動更新されます。</p>
+
+        <h2 class="fade-section">まとめと次の一歩 ✨</h2>
+        <p class="fade-section">小〜中規模の静的サイトなら、Lunr.js + search-index.json（と自動生成スクリプト）で十分実用的です。より高度な機能が必要なら Algolia を検討してください。</p>
+
+        <p class="fade-section">次に進めたい場合（例）：<strong>あなたのサイト構成を教えてください</strong>。どの方法が最適か、具体的なファイルやスクリプト例をカスタマイズしてお渡しします。</p>
+      </section>
+    </article>
+  </main>
+
+  <!-- トップへ戻るボタン（アクセス可能に） -->
+  <a href="#top" id="back-to-top" role="button" aria-label="ページの先頭へ戻る" tabindex="0">⬆︎ トップへ戻る</a>
+
+  <!-- 必要なJavaScript（ヘッダー読み込み、目次生成、IntersectionObserver、トップへ戻る表示） -->
+  <script>
+    /* ============================
+       ヘッダーの動的読み込み
+       - fetch + DOMParser を使い /ai-comparison-test-site/header.html の中身を取得して挿入
+       - header.html 内の .site-header（または body の子）を優先してマウント
+       ============================ */
+    (function loadHeader(){
+      const mount = document.getElementById('header-mount');
+      if (!mount) return;
+      fetch('/ai-comparison-test-site/header.html', {cache: "no-store"})
+        .then(res => {
+          if (!res.ok) throw new Error('ヘッダー取得に失敗');
+          return res.text();
+        })
+        .then(htmlText => {
+          // HTML文字列をDOMに変換
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlText, 'text/html');
+          // .site-header または .header-container を優先して抽出、なければ body の中身を使う
+          const headerEl = doc.querySelector('.site-header') || doc.querySelector('.header-container') || doc.body;
+          // 挿入：既存の子要素をそのまま移す（フラグメント経由）
+          const frag = document.createDocumentFragment();
+          Array.from(headerEl.childNodes).forEach(node => frag.appendChild(node.cloneNode(true)));
+          mount.appendChild(frag);
+          mount.setAttribute('aria-hidden','false');
+        })
+        .catch(err => {
+          // フェールセーフ：取得失敗でもページは読める
+          console.warn('header load failed:', err);
+        });
+    })();
+
+    /* ============================
+       目次の自動生成
+       - ページ内の h2, h3 を抽出してアンカー付きの目次を作る
+       - 各見出しにユニークな id を付与
+       ============================ */
+    (function buildTOC(){
+      const content = document.querySelector('.post-body');
+      const tocContainer = document.getElementById('toc-list');
+      if (!content || !tocContainer) return;
+
+      // 対象見出しを取得（NodeList -> Array）
+      const headings = Array.from(content.querySelectorAll('h2, h3'));
+      if (headings.length === 0) {
+        tocContainer.innerHTML = '<p>目次はありません。</p>';
+        return;
+      }
+
+      // slugify + カウンタでユニーク id を生成
+      const slugCounts = {};
+      function makeId(text){
+        const base = text.toLowerCase().trim()
+          .replace(/[^\w\s-]/g, '')   // 記号を除去
+          .replace(/\s+/g, '-');      // 空白をハイフンに
+        slugCounts[base] = (slugCounts[base] || 0) + 1;
+        return slugCounts[base] === 1 ? base : `${base}-${slugCounts[base]}`;
+      }
+
+      const ul = document.createElement('ul');
+      headings.forEach(h => {
+        // 既に id がある場合は尊重するが、なければ自動付与
+        if (!h.id) h.id = makeId(h.textContent || 'heading');
+        const li = document.createElement('li');
+        // indent h3 slightly for readability
+        if (h.tagName.toLowerCase() === 'h3') li.style.marginLeft = '0.8rem';
+        const a = document.createElement('a');
+        a.href = `#${h.id}`;
+        a.textContent = `${h.textContent}`;
+        a.setAttribute('aria-label', `目次: ${h.textContent}`);
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      tocContainer.appendChild(ul);
+    })();
+
+    /* ============================
+       スクロール時のフェードイン（IntersectionObserver）
+       - .fade-section を監視して in-view クラスを付与
+       ============================ */
+    (function applyScrollFade(){
+      const observerOptions = { root: null, rootMargin: '0px 0px -8% 0px', threshold: 0.08 };
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            // 一度表示したらアンobserveして処理を軽くする
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      // 監視する要素を登録
+      const targets = document.querySelectorAll('.fade-section');
+      targets.forEach(t => observer.observe(t));
+    })();
+
+    /* ============================
+       「トップへ戻る」ボタンの表示制御と動作
+       - 1画面分（window.innerHeight）を超えたら表示
+       - クリック／Enterでスムーズスクロール
+       ============================ */
+    (function backToTop(){
+      const btn = document.getElementById('back-to-top');
+      if (!btn) return;
+
+      // 表示制御
+      function checkScroll(){
+        if (window.scrollY > window.innerHeight) {
+          btn.classList.add('show');
+        } else {
+          btn.classList.remove('show');
+        }
+      }
+      window.addEventListener('scroll', checkScroll, { passive: true });
+      window.addEventListener('resize', checkScroll);
+
+      // クリックとキーボード操作（Enter/Space）でトップへ
+      function goTop(e){
+        if (e.type === 'click' || (e.type === 'keydown' && (e.key === 'Enter' || e.key === ' '))) {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      }
+      btn.addEventListener('click', goTop);
+      btn.addEventListener('keydown', goTop);
+      // 初回チェック
+      checkScroll();
+    })();
+  </script>
+</body>
+</html>
