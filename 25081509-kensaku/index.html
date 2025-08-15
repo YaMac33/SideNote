@@ -1,18 +1,13 @@
 <!DOCTYPE html>
-
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <!-- ページタイトル：記事内容を端的かつ魅力的に表現 -->
   <title>25.8.15 09 静的サイト向け：Lunr.js と Algolia で作る検索実装ガイド（Jekyll不要）</title>
-
   <!-- サイト全体のスタイル（指定どおり1回だけ読み込み） -->
-
   <link rel="stylesheet" href="/ai-comparison-test-site/style.css" />
-
   <!-- 最低限のインラインCSS（20行以内）: ヘッダー重なり回避、画像レスポンシブ、フェード/ボタン -->
-
   <style>
     /* コンテンツが固定ヘッダーに隠れないように余白を確保（ヘッダー挿入後にJSで調整） */
     .content { padding: 1.5rem; padding-top: var(--header-height,72px); max-width:900px; margin:0 auto; }
@@ -22,38 +17,30 @@
     #to-top { position:fixed; right:1rem; bottom:1.5rem; display:inline-block; padding:.6rem .8rem; border-radius:8px; box-shadow:0 4px 12px rgba(0,0,0,.15); background:#fff; cursor:pointer; opacity:0; pointer-events:none; transition:opacity .3s ease; }
     #to-top.show { opacity:1; pointer-events:auto; }
   </style>
-
 </head>
 <body>
   <!-- ヘッダーを動的に読み込むためのマウントポイント -->
   <div id="header-mount" aria-hidden="true"></div>
-
   <main class="content" id="main-content">
     <!-- 主見出し（絵文字を控えめに） -->
     <h1>静的サイトで導入するサイト内検索：Lunr.js（自力）とAlgolia（外部）の2パターン解説 🔎</h1>
-
 ```
 <!-- 目次はJSで自動生成（h2/h3を抽出） -->
 <nav id="table-of-contents" aria-label="目次"></nav>
-
 <!-- 記事本文 -->
 <article id="article-body">
   <!-- 方法A（Lunr.js） -->
   <section class="fade-in fade-in-target">
     <h2>方法A：Lunr.js を使う（自力で完結させる方法） 🧰</h2>
     <p>外部サービスに頼らず、無料でサイト内検索を実装する方法です。サイトの全ページの情報をまとめたJSONファイルを手動（またはスクリプトで）作成し、それを使って検索します。</p>
-
     <h3>ステップ1：検索データ <code>search-index.json</code> を作成する</h3>
     <p>まず、サイト内の検索対象にしたいページの情報をまとめたJSONファイルを作成します。作業は手動でもスクリプトでも構いませんが、このファイルが検索の核になります。</p>
-
     <figure>
       <!-- 画像は本文に無いので例示は省略。altは必須。 -->
       <figcaption>search-index.json のイメージ（例）</figcaption>
     </figure>
-
     <pre><code aria-label="search-index.jsonの例">[
 ```
-
 {
 "id": 0,
 "url": "/about.html",
@@ -81,7 +68,6 @@
 
     <h3>ステップ3：JavaScriptを記述する（Lunr.jsを使用）</h3>
     <p>以下のスクリプトを追加します。まずは Lunr.js 本体を読み込む必要があります（例：CDN）。</p>
-
     <p>参考 CDN（クリックして別タブで開く）：<br />
       <a href="https://unpkg.com/lunr/lunr.min.js">https://unpkg.com/lunr/lunr.min.js</a>
     </p>
@@ -161,13 +147,9 @@ resultsContainer.appendChild(noResult);
 ```
 
   </main>
-
   <!-- トップへ戻るボタン（アクセシビリティのためaria-labelを付与） -->
-
 <button id="to-top" aria-label="トップへ戻る">↑ トップへ戻る</button>
-
   <!-- JavaScript：ヘッダー読み込み、目次生成、IntersectionObserver、トップボタン等（コメント多数） -->
-
   <script>
     // ============================
     // ヘッダーの動的読み込み
@@ -356,6 +338,5 @@ resultsContainer.appendChild(noResult);
       });
     })();
   </script>
-
 </body>
 </html>
