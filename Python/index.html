@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>2025年版 人気プログラミング言語とAI活用の最新動向💡</title>
+  <link rel="stylesheet" href="/ai-comparison-test-site/style.css" />
+  <style>
+    /* インラインCSS：フェードインアニメーションとトップへ戻るボタン */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: none;
+    }
+    #backToTop {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      font-size: 1rem;
+      z-index: 1000;
+    }
+    #backToTop.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+  <!-- ヘッダーを動的に読み込む場所 -->
+  <div id="header-mount" aria-label="サイト共通ヘッダー"></div>
+
+  <main class="content-container" style="padding-top: 6rem;">
+    <article>
+      <h1>2025年版 人気プログラミング言語とAI活用の最新動向💡</h1>
+      <!-- 目次がJSで自動生成されここに挿入される -->
+      <nav aria-label="ページ内目次" id="toc" class="fade-in"></nav>
+
+      <section class="fade-in">
+        <h2>🔝 総合的に人気のあるプログラミング言語（開発全般）</h2>
+        <p>2025年現在、ウェブアプリやソフトウェア開発においてシェアが高い・人気のあるプログラミング言語は以下の通りです。開発目的・分野ごとに異なりますが、全体的に人気な言語を中心に紹介します。</p>
+        <table>
+          <caption>主要言語と特徴・利用分野</caption>
+          <thead>
+            <tr>
+              <th>言語</th>
+              <th>用途・特徴</th>
+              <th>主な利用分野</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>JavaScript</td><td>フロントエンドで必須。Node.jsでバックエンドも対応可能。</td><td>Webアプリ全般</td></tr>
+            <tr><td>Python</td><td>シンプルで読みやすく、AI/機械学習でも人気。</td><td>バックエンド、データ分析、AI、スクリプト</td></tr>
+            <tr><td>TypeScript</td><td>JavaScriptの拡張版。型安全で大規模開発向き。</td><td>Webアプリ（フロント・バック）</td></tr>
+            <tr><td>Java</td><td>安定性と堅牢性。Android開発でも使用される。</td><td>Webアプリ、エンタープライズ、Android</td></tr>
+            <tr><td>C#</td><td>Microsoft系。WindowsアプリやWebアプリ（ASP.NET）に強い。</td><td>デスクトップ、Web、ゲーム（Unity）</td></tr>
+            <tr><td>Go（Golang）</td><td>高速・シンプル。マイクロサービスや高性能APIで人気。</td><td>バックエンド、クラウド系、インフラ系</td></tr>
+            <tr><td>PHP</td><td>Web開発の古参。WordPressや中小向けWebで根強い。</td><td>Webサイト、CMS</td></tr>
+            <tr><td>Ruby</td><td>RailsでWebアプリが素早く開発可能。</td><td>スタートアップのWebアプリ</td></tr>
+            <tr><td>Kotlin</td><td>Android公式言語。Javaよりモダン。</td><td>Androidアプリ</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="fade-in">
+        <h2>📊 2025年の人気・シェアのデータ（参考）</h2>
+        <p>Stack Overflow 開発者調査（2025年版の傾向）より、最も利用されている言語上位は以下の通りです。</p>
+        <ul>
+          <li>JavaScript</li>
+          <li>Python</li>
+          <li>TypeScript</li>
+          <li>SQL</li>
+          <li>Java</li>
+        </ul>
+        <p>GitHub上の人気（Stars・コントリビューション）は特に以下の言語が活発です。</p>
+        <ul>
+          <li>JavaScript/TypeScript（React, Next.js, Vueなど）</li>
+          <li>Python（Django, Flask, FastAPIなど）</li>
+          <li>Go（高速API、クラウドネイティブ）</li>
+          <li>Rust（システム・WebAssembly向けに急成長中）</li>
+        </ul>
+      </section>
+
+      <section class="fade-in">
+        <h2>💡 開発目的別のおすすめ言語</h2>
+        <table>
+          <caption>開発内容ごとの推奨言語</caption>
+          <thead>
+            <tr>
+              <th>開発内容</th>
+              <th>おすすめ言語</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>フロントエンド</td><td>JavaScript / TypeScript (＋React, Vue, etc.)</td></tr>
+            <tr><td>バックエンド</td><td>Python, Node.js, Go, Java, C#, Ruby</td></tr>
+            <tr><td>モバイルアプリ</td><td>Kotlin (Android), Swift (iOS), Flutter (Dart)</td></tr>
+            <tr><td>デスクトップアプリ</td><td>C#, Java, Electron (JS)</td></tr>
+            <tr><td>ゲーム開発</td><td>C#, C++（Unity, Unreal）</td></tr>
+            <tr><td>AI / 機械学習</td><td>Python（TensorFlow, PyTorch）</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="fade-in">
+        <h2>🔚 結論</h2>
+        <p>現代のウェブアプリやソフトウェア開発における最重要言語は特に以下の3つです：</p>
+        <ul>
+          <li>JavaScript / TypeScript（Web開発の中心）</li>
+          <li>Python（汎用性とAI対応）</li>
+          <li>Java / C#（エンタープライズや大規模開発）</li>
+        </ul>
+        <p>具体的なプロジェクトに合わせた言語選定のアドバイスも可能です。お気軽にご相談ください！</p>
+      </section>
+
+      <section class="fade-in">
+        <h2>🧠 JavaScriptとPythonのAI活用の違い</h2>
+        <p>JavaScriptとPythonはどちらもAI分野で活用されていますが、使われ方や強みは異なります。</p>
+        <h3>PythonがAIで活躍する理由と活用方法</h3>
+        <ul>
+          <li>AI・機械学習分野での標準言語</li>
+          <li>豊富な数値計算・機械学習ライブラリ</li>
+          <li>読みやすく研究者にも人気</li>
+        </ul>
+        <p>主な活用分野には機械学習（scikit-learn等）、深層学習（TensorFlow, PyTorch）、自然言語処理（spaCy, Transformers）などがあります。</p>
+
+        <h3>JavaScriptがAIで活用される場面と方法</h3>
+        <ul>
+          <li>ブラウザ上でAIモデルを実行可能</li>
+          <li>Pythonで学習したモデルのWebデプロイ</li>
+          <li>TesorFlow.jsやbrain.jsなどのライブラリ</li>
+        </ul>
+        <p>リアルタイム顔認識や音声コマンド処理などに強みがあります。</p>
+      </section>
+
+      <section class="fade-in">
+        <h2>🔁 PythonとJavaScriptのAIにおける役割の違い</h2>
+        <table>
+          <caption>AIフェーズ別の主な言語と役割</caption>
+          <thead>
+            <tr>
+              <th>フェーズ</th>
+              <th>主な使用言語</th>
+              <th>役割</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>学習（トレーニング）</td><td>Python</td><td>大量データでモデル作成</td></tr>
+            <tr><td>デプロイ（提供）</td><td>Python / JavaScript</td><td>
+            <tr><td>デプロイ（提供）</td><td>Python / JavaScript</td><td>APIサーバーやWebブラウザでモデルの提供</td></tr>
+            <tr><td>クライアント実行</td><td>JavaScript</td><td>ブラウザやNode.js環境でリアルタイム推論</td></tr>
+          </tbody>
+        </table>
+        <p>このように、PythonはAIモデルの構築・学習に強みがあり、JavaScriptは完成したモデルをWebやアプリで動かす役割が多いです。両者を組み合わせることで、強力なAI搭載システムを作れます。</p>
+      </section>
+
+      <section class="fade-in">
+        <h2>🌟 まとめ</h2>
+        <p>2025年の開発言語選定では、用途や開発規模に応じて柔軟に選ぶことが重要です。AI活用も増えており、PythonとJavaScriptの協調利用が今後のトレンドです。最新情報や具体的な技術相談はいつでもどうぞ！</p>
+      </section>
+
+    </article>
+  </main>
+
+  <button id="backToTop" aria-label="ページトップへ戻る">▲ トップへ</button>
+
+  <script>
+    // ヘッダーを動的に読み込み（例：header.htmlを読み込み挿入）
+    fetch('/header.html')
+      .then(response => response.text())
+      .then(html => {
+        document.getElementById('header-mount').innerHTML = html;
+      });
+
+    // フェードインアニメーション処理
+    document.addEventListener('DOMContentLoaded', () => {
+      const fadeElems = document.querySelectorAll('.fade-in');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+      fadeElems.forEach(elem => observer.observe(elem));
+    });
+
+    // トップへ戻るボタン制御
+    const backToTopBtn = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTopBtn.classList.add('visible');
+      } else {
+        backToTopBtn.classList.remove('visible');
+      }
+    });
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // 目次自動生成（h2見出しから）
+    function generateTOC() {
+      const toc = document.getElementById('toc');
+      const headers = document.querySelectorAll('article h2');
+      if (headers.length === 0) return;
+      const ul = document.createElement('ul');
+      headers.forEach((header, index) => {
+        const id = `section-${index}`;
+        header.id = id;
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `#${id}`;
+        a.textContent = header.textContent;
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      toc.appendChild(ul);
+    }
+    document.addEventListener('DOMContentLoaded', generateTOC);
+  </script>
+</body>
+</html>
