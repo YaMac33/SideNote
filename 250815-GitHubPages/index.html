@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GitHub Pagesでお知らせを自動アーカイブする方法（GitHub Actions＋リダイレクト）</title>
+  <link rel="stylesheet" href="/ai-comparison-test-site/style.css">
+  <style>
+    /* 必要最小限のインラインCSS（20行以内） */
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    #back-to-top { 
+      position: fixed; bottom: 20px; right: 20px; 
+      padding: 10px 15px; font-size: 14px; cursor: pointer; 
+      background: #333; color: #fff; border: none; border-radius: 4px; 
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    #back-to-top.show { opacity: 1; pointer-events: auto; }
+  </style>
+</head>
+<body>
+  <!-- 共通ヘッダーを動的に読み込む -->
+  <div id="header-mount"></div>
+
+  <main style="padding-top: 80px;">
+    <h1 class="fade-in">📦 GitHub Pagesでお知らせを自動アーカイブする方法</h1>
+    <!-- ここにJSで目次を自動生成 -->
+    <div id="toc" class="fade-in" aria-label="記事の目次"></div>
+
+    <section class="fade-in">
+      <p>GitHubリポジトリ内で新着ディレクトリをトップページに表示し、一定期間経過後に自動でアーカイブしたい場合、<strong>GitHub Actions</strong> と <strong>リダイレクトHTML生成</strong> を組み合わせるのが最適です。</p>
+    </section>
+
+    <h2 class="fade-in">なぜGitHub Actionsが最適なのか？</h2>
+    <section class="fade-in">
+      <p>GitHubのAPIでディレクトリ一覧を取得している場合、<strong>ファイルを移動すればトップページから自動的に消える</strong>ため、手作業の更新が不要になります。</p>
+    </section>
+
+    <h2 class="fade-in">手順1：GitHub Actionsで古いディレクトリを移動</h2>
+    <section class="fade-in">
+      <p>.github/workflows/archive.yml を作成し、以下のように記述します：</p>
+      <pre><code>name: Auto Archive Old News
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'  # 毎週月曜午前3時(UTC)
+  workflow_dispatch:
+
+jobs:
+  archive:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Move old directories
+        run: |
+          find news/* -type d -mtime +30 | while read dir; do
+            mkdir -p archive/$(dirname "$dir")
+            git mv "$dir" "archive/$dir"
+            echo "Archived $dir"
+          done
+
+      - name: Commit changes
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add .
+          git diff --staged --quiet || git commit -m "Auto-archive old news"
+          git push</code></pre>
+    </section>
+
+    <h2 class="fade-in">手順2：リダイレクトページを自動生成</h2>
+    <section class="fade-in">
+      <p>移動元の場所に index.html を生成して、訪問者を新しいURLへ転送します。</p>
+      <pre><code>echo '&lt;!DOCTYPE html&gt;
+&lt;html&gt;&lt;head&gt;
+&lt;meta charset="UTF-8"&gt;
+&lt;title&gt;このページは移動しました&lt;/title&gt;
+&lt;meta http-equiv="refresh" content="0; url=../archive/${dir}/"&gt;
+&lt;link rel="canonical" href="../archive/${dir}/"&gt;
+&lt;/head&gt;&lt;body&gt;
+&lt;p&gt;このページは移動しました。自動的にジャンプしない場合は
+&lt;a href="../archive/${dir}/"&gt;こちら&lt;/a&gt;をクリックしてください。&lt;/p&gt;
+&lt;/body&gt;&lt;/html&gt;' > "$dir/index.html"</code></pre>
+      <p>この処理をGitHub Actionsのスクリプト内に追加すると、リンク切れを防止できます。</p>
+    </section>
+
+    <h2 class="fade-in">まとめ</h2>
+    <section class="fade-in">
+      <ul>
+        <li>⚡ <strong>完全自動化</strong>：GitHub Actionsで定期実行</li>
+        <li>🔗 <strong>URL切れ防止</strong>：リダイレクトHTMLを生成</li>
+        <li>💡 <strong>フロントエンドの変更不要</strong></li>
+      </ul>
+    </section>
+  </main>
+
+  <!-- トップへ戻るボタン -->
+  <button id="back-to-top" aria-label="トップへ戻る">▲</button>
+
+  <script>
+    // ヘッダーをfetchで動的に読み込む
+    fetch("/ai-comparison-test-site/header.html")
+      .then(res => res.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        document.getElementById("header-mount").innerHTML = doc.body.innerHTML;
+      })
+      .catch(err => console.error("Header load error:", err));
+
+    // 目次の自動生成
+    document.addEventListener("DOMContentLoaded", () => {
+      const toc = document.getElementById("toc");
+      const headings = document.querySelectorAll("h2, h3");
+      if (headings.length) {
+        const ul = document.createElement("ul");
+        headings.forEach((h, i) => {
+          const id = "heading-" + i;
+          h.id = id;
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = "#" + id;
+          a.textContent = h.textContent;
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+        toc.appendChild(ul);
+      }
+    });
+
+    // スクロールアニメーション
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) entry.target.classList.add("visible");
+      });
+    }, { threshold: 0.1 });
+    document.querySelectorAll(".fade-in").forEach(el => observer.observe(el));
+
+    // トップへ戻るボタン
+    const topBtn = document.getElementById("back-to-top");
+    window.addEventListener("scroll", () => {
+      if (window.scrollY > window.innerHeight) {
+        topBtn.classList.add("show");
+      } else {
+        topBtn.classList.remove("show");
+      }
+    });
+    topBtn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  </script>
+</body>
+</html>
