@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>25.8.13 GoogleのAIコーディングエージェント「Jules」総まとめ🚀| SmartSideNote</title>
+    
+    <link rel="stylesheet" href="/ai-comparison-test-site/style.css">
+    
+    <style>
+        /* -- IntersectionObserver用: アニメーションの起点 -- */
+        .fade-in-target {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+        }
+        /* -- IntersectionObserver用: ビューポートインで付与されるクラス -- */
+        .fade-in-target.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* -- トップへ戻るボタンの基本スタイルと遷移 -- */
+        #back-to-top {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 1000;
+            cursor: pointer;
+        }
+        /* -- トップへ戻るボタンの表示状態 -- */
+        #back-to-top.is-visible {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-mount"></div>
+
+    <div class="container">
+        
+        <main>
+            <header class="page-header fade-in-target">
+                <h1>GoogleのAIコーディングエージェント「Jules」総まとめ 🚀</h1>
+                <p>AIの進化が止まらない今日この頃。ついに一般公開されたGoogleの「Jules」について、自分用に情報を整理してみました。</p>
+            </header>
+
+            <nav id="toc-container" class="fade-in-target" aria-labelledby="toc-title">
+                <h2 id="toc-title">目次</h2>
+                <ol id="toc-list"></ol>
+            </nav>
+
+            <section class="fade-in-target">
+                <h2>そもそも「Jules」って何？ 🤔</h2>
+                <p>まず基本からおさらい。Julesは、<strong>Googleが開発したAIコーディングエージェント</strong>です。単にコードの断片を補完してくれるアシスタントとは一味違い、もっと自律的に動いてくれる「エージェント」という位置づけなのがポイントですね。</p>
+                <p>最大の特徴は<strong>「非同期」</strong>で動作する点。開発者が「この機能を追加して」「このバグを修正して」といったタスクを自然言語で依頼すると、Julesがバックグラウンドで必要なファイルを探し、コードを書き、テストまで実行してくれます。その間、人間は別の作業に集中できるわけです。まるで優秀な同僚に仕事をまるっとお願いする感覚に近いかもしれません。💻</p>
+                <p>この頭脳部分には、Googleの最新AIモデル<strong>「Gemini 2.5 Pro」</strong>が搭載されているとのこと。技術的な心臓部もパワフルで、期待が高まります。</p>
+            </section>
+
+            <section class="fade-in-target">
+                <h2>正式リリースで何が変わった？ ✨</h2>
+                <p>ベータ版から一般公開（GA: General Availability）になって、いくつかの進化があったようです。開発者の生産性をさらに向上させるための、かゆいところに手が届くアップデートがされている印象です。</p>
+                <ul>
+                    <li><strong>全ユーザーに開放:</strong> これが一番大きいですね。誰でも使えるようになりました！</li>
+                    <li><strong>新しいUI:</strong> より直感的で使いやすいインターフェースに進化したようです。</li>
+                    <li><strong>設定の再利用機能:</strong> プロジェクトの設定などを保存して、別のタスクで再利用できる機能。毎回同じ設定をしなくていいのは、地味に嬉しいポイント。</li>
+                </ul>
+            </section>
+
+            <section class="fade-in-target">
+                <h2>気になる料金プランは？無料でも使える！ 💰</h2>
+                <p>やっぱり気になるのはお値段。Julesには無料プランと有料プランが用意されています。まずは無料プランで使い心地を試せるのはありがたいですね。</p>
+                <div class="project-list">
+                    <div class="project-card">
+                        <h3>🆓 無料プラン</h3>
+                        <p>個人開発やちょっとしたツール作成に最適。</p>
+                        <p><strong>1日あたり15タスクまで</strong>気軽にJulesのパワーを体験できます。</p>
+                    </div>
+                    <div class="project-card">
+                        <h3>💼 有料プラン</h3>
+                        <p>チームでの利用や本格的な開発向け。</p>
+                        <p><strong>より多くのタスクを実行可能</strong>で、月額課金でJulesをフル活用できます。</p>
+                    </div>
+                    <div class="project-card">
+                        <h3>🎓 学生向け特典</h3>
+                        <p>なんと、大学生は有料プランの機能が無料！</p>
+                        <p>未来のエンジニアを<strong>最高の学習ツール</strong>で強力にサポートします。</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="fade-in-target">
+                <h2>他のツールとどう違うの？Julesのユニークな点 🤖</h2>
+                <p>AIコーディングツールといえば、GitHub Copilotや、話題になったDevinなどライバルも多いですよね。「非同期」というコンセプトに加えて、こういったユニークな機能が、他のツールとの差別化ポイントになっていきそうです。</p>
+                <ul>
+                    <li><strong>マルチモーダルサポート:</strong> テキストだけでなく、画像なども理解できるようです。例えば、デザインカンプのスクリーンショットを見せて<code>「これと同じUIを作って」</code>といった指示ができるようになるかもしれません。</li>
+                    <li><strong>音声サマリー:</strong> タスク完了時に、変更点を音声で要約してくれる機能。コードレビューが捗りそうです。🗣️</li>
+                    <li><strong>GitHubとの連携:</strong> もちろん、GitHubリポジトリと連携して、コードの修正やプルリクエストの作成も自動で行ってくれます。</li>
+                </ul>
+            </section>
+        
+            <footer class="fade-in-target">
+                <h2>まとめと情報ソース一覧 📚</h2>
+                <p>今回は、GoogleのAIコーディングエージェント「Jules」の正式リリースにあたって、気になった情報を自分なりにまとめてみました。</p>
+                <p><strong>「非同期」「Gemini 2.5 Pro搭載」「無料プランあり」</strong>という点が特に重要かなと感じています。開発の生産性を劇的に変えるポテンシャルを秘めていそうで、エンジニアとしての働き方も変わっていくのかもしれない、と少し未来に思いを馳せてしまいますね。</p>
+                <p>まずは無料プランで、自分のプライベートなプロジェクトに導入してみたいと思います。</p>
+                <blockquote>
+                    <p><strong>参考情報ソース（一部）:</strong></p>
+                    <ul>
+                        <li><a href="https://jobirun.com/google-ai-coding-agent-jules-now-public/" target="_blank" rel="noopener noreferrer">JOBIRUN</a></li>
+                        <li><a href="https://japan.zdnet.com/article/35236498/" target="_blank" rel="noopener noreferrer">ZDNET Japan</a></li>
+                        <li><a href="https://forest.watch.impress.co.jp/docs/news/2037539.html" target="_blank" rel="noopener noreferrer">窓の杜</a></li>
+                        <li><a href="https://gigazine.net/news/20250807-ai-coding-agent-jules-public/" target="_blank" rel="noopener noreferrer">GIGAZINE</a></li>
+                        <li><a href="https://www.itmedia.co.jp/aiplus/articles/2508/07/news065.html" target="_blank" rel="noopener noreferrer">ITmedia</a></li>
+                    </ul>
+                </blockquote>
+            </footer>
+        </main>
+    </div>
+
+    <button id="back-to-top" aria-label="ページトップへ戻る">▲</button>
+    
+    <script>
+        // DOMの読み込みが完了してからスクリプトを実行
+        document.addEventListener('DOMContentLoaded', () => {
+
+            /**
+             * 1) ヘッダーを非同期で読み込み、#header-mountに挿入する
+             */
+            const loadHeader = async () => {
+                try {
+                    // header.htmlをフェッチ
+                    const response = await fetch('/ai-comparison-test-site/header.html');
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    
+                    const text = await response.text();
+                    
+                    // 文字列をDOMにパース
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+                    
+                    // header要素の中身だけを抽出
+                    const headerContent = doc.querySelector('header');
+                    const mountPoint = document.getElementById('header-mount');
+                    
+                    if (headerContent && mountPoint) {
+                        // 抽出したDOMをマウントポイントに挿入
+                        mountPoint.append(...headerContent.childNodes);
+                    }
+                } catch (error) {
+                    console.error('ヘッダーの読み込みに失敗しました:', error);
+                }
+            };
+
+            /**
+             * 2) IntersectionObserverで見出しやセクションをフェードインさせる
+             */
+            const setupFadeInObserver = () => {
+                // アニメーション対象の要素を取得
+                const targets = document.querySelectorAll('.fade-in-target');
+                
+                const observer = new IntersectionObserver((entries, observer) => {
+                    entries.forEach(entry => {
+                        // 要素がビューポートに入ったら
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('is-visible');
+                            // 一度表示したら監視を解除してパフォーマンスを向上
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 }); // 要素が10%見えたら発火
+
+                // 各要素の監視を開始
+                targets.forEach(target => observer.observe(target));
+            };
+
+            /**
+             * 3) 目次をh2要素から自動生成する
+             */
+            const generateTableOfContents = () => {
+                const tocList = document.getElementById('toc-list');
+                const headings = document.querySelectorAll('main h2');
+                
+                // 目次コンテナか見出しが存在しない場合は処理を中断
+                if (!tocList || headings.length === 0) {
+                   const tocContainer = document.getElementById('toc-container');
+                   if (tocContainer) tocContainer.style.display = 'none';
+                   return;
+                }
+
+                headings.forEach(heading => {
+                    const text = heading.textContent.trim();
+                    // 見出しのテキストからアンカーリンク用のIDを生成（空白はハイフンに置換）
+                    const id = text.replace(/\s+/g, '-');
+                    heading.id = id;
+
+                    // li要素とa要素を作成
+                    const listItem = document.createElement('li');
+                    const anchor = document.createElement('a');
+                    anchor.href = `#${id}`;
+                    anchor.textContent = text;
+                    
+                    // アンカーリンククリック時にスムーススクロールを実行
+                    anchor.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+                    });
+                    
+                    listItem.appendChild(anchor);
+                    tocList.appendChild(listItem);
+                });
+            };
+            
+            /**
+             * 4) トップへ戻るボタンの表示/非表示とスムーススクロール機能
+             */
+            const setupBackToTopButton = () => {
+                const button = document.getElementById('back-to-top');
+                if (!button) return;
+
+                // スクロール位置に応じてボタンの表示/非表示を切り替え
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > window.innerHeight / 2) { // 画面半分の高さよりスクロールしたら表示
+                        button.classList.add('is-visible');
+                    } else {
+                        button.classList.remove('is-visible');
+                    }
+                });
+
+                // ボタンクリックでページ最上部へスムーススクロール
+                button.addEventListener('click', () => {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            };
+
+            // --- 全ての初期化関数を実行 ---
+            loadHeader();
+            setupFadeInObserver();
+            generateTableOfContents();
+            setupBackToTopButton();
+        });
+    </script>
+
+</body>
+</html>
