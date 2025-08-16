@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>静的サイトで導入するサイト内検索：Lunr.js（自力）とAlgolia（外部）の2パターン解説 🔎</title>
-  <meta name="description" content="静的サイトにサイト内検索を導入する2つの方法、自力で実装するLunr.jsと高機能な外部サービスAlgoliaについて、それぞれのメリットと実装手順を解説します。">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title><<<PAGE_TITLE>>></title>
+  <meta name="description" content="<<<META_DESCRIPTION>>>">
+  <!-- Google tag (gtag.js) - GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MQ9ZB4LYWP"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -13,350 +13,277 @@
     gtag('js', new Date());
     gtag('config', 'G-MQ9ZB4LYWP');
   </script>
-
   <style>
-    /* Reset & Globals */
-    :root {
-      --header-bg: #fff;
-      --body-bg: #f4f7f6;
-      --article-bg: #ffffff;
-      --text-color: #333;
-      --heading-color: #2c3e50;
-      --accent-color-1: #008080; /* Teal */
-      --accent-color-2: #00aaff; /* Light Blue */
-      --grey-color: #666666;
-      --border-color: #e0e0e0;
-      --code-bg: #2d2d2d;
-      --code-color: #f8f8f2;
-      --header-height: 70px;
+    :root{
+      --teal:#008080;
+      --teal-600:#007171;
+      --accent:#00aaff;
+      --gray-900:#222;
+      --gray-700:#444;
+      --gray-600:#666;
+      --gray-500:#888;
+      --gray-200:#eee;
+      --gray-150:#f3f5f7;
+      --white:#fff;
+      --shadow:0 6px 24px rgba(0,0,0,.08);
+      --radius:14px;
+      --maxw:1200px;
+      --header-h:78px;
     }
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body {
-      font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-      line-height: 1.7;
-      background-color: var(--body-bg);
-      color: var(--text-color);
-      padding-top: var(--header-height);
-    }
-    a {
-      color: var(--accent-color-1);
-      text-decoration: none;
-      transition: color 0.3s;
-    }
-    a:hover {
-      color: var(--accent-color-2);
-      text-decoration: underline;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-    }
+    /* ---------- Reset (minimal) ---------- */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    img{max-width:100%;height:auto;display:block}
+    a{color:inherit;text-decoration:none}
+    ul,ol{padding-left:1.3em}
+    code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace}
 
-    /* Header */
+    /* ---------- Header (Fixed) ---------- */
     .site-header {
-      background-color: var(--header-bg);
-      padding: 0 20px;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 1000;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      height: var(--header-height);
-      display: flex;
-      align-items: center;
+      background-color:#fff;
+      padding:20px 20px;
+      position:fixed; top:0; width:100%; z-index:1000;
+      border-bottom:1px solid #e9eef3;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.03);
     }
     .header-container {
-      width: 100%;
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      max-width:var(--maxw);
+      margin:0 auto;
+      display:flex; justify-content:space-between; align-items:center;
     }
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      letter-spacing: 1.5px;
-      transition: color 0.3s;
-      text-decoration: none;
-    }
-    .logo:hover {
-      text-decoration: none;
-      color: var(--accent-color-2);
-    }
-    .logo-teal { color: var(--accent-color-1); }
-    .logo-grey { color: var(--grey-color); }
-    .main-nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-    }
-    .main-nav li { margin-left: 30px; }
-    .main-nav a {
-      font-size: 16px;
-      padding: 5px;
-      position: relative;
-      transition: color 0.3s;
-      text-decoration: none;
-    }
-    .main-nav a:hover {
-      color: var(--accent-color-2);
-      text-decoration: none;
-    }
+    .logo { font-size:28px; font-weight:bold; letter-spacing:1.5px; transition:color .3s; line-height:1; display:inline-flex; gap:4px; }
+    .logo:hover { color:#00aaff; }
+    .logo-smart { color:#008080; }
+    .logo-side { color:#666666; }
+
+    .main-nav ul { margin:0; padding:0; list-style:none; display:flex; }
+    .main-nav li { margin-left:30px; }
+    .main-nav a { font-size:16px; padding:5px; position:relative; transition:color .3s; color:var(--gray-700); }
+    .main-nav a:hover { color:#00aaff; }
     .main-nav a::after {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      background-color: var(--accent-color-2);
-      bottom: -5px;
-      left: 0;
-      transform: scaleX(0);
-      transform-origin: center;
-      transition: transform 0.3s ease;
+      content:''; position:absolute; width:100%; height:2px; background-color:#00aaff;
+      bottom:-5px; left:0; transform:scaleX(0); transform-origin:left; transition:transform .3s;
     }
-    .main-nav a:hover::after { transform: scaleX(1); }
+    .main-nav a:hover::after { transform:scaleX(1); }
 
-    /* Main Article Styles - Unique Design */
-    .main-content {
-      padding: 40px 20px;
+    /* ---------- Page Layout (Distinct style for this article) ---------- */
+    body{
+      background:
+        radial-gradient(1200px 400px at 50% -200px, rgba(0,170,255,.12), transparent 60%),
+        linear-gradient(180deg, #ffffff 0%, #f9fbfc 100%);
+      color:var(--gray-900);
     }
-    .article-container {
-      max-width: 900px;
-      margin: 0 auto;
-      background-color: var(--article-bg);
-      padding: 40px 50px;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    main{ padding-top: calc(var(--header-h) + 32px); }
+    .hero{
+      margin-top:var(--header-h);
+      background: linear-gradient(135deg, rgba(0,170,255,.08), rgba(0,128,128,.08));
+      border-bottom:1px solid #e6eef3;
     }
-    .article-header h1 {
-      font-size: 2.5em;
-      color: var(--heading-color);
-      margin-bottom: 20px;
-      line-height: 1.3;
-      letter-spacing: -1px;
+    .hero-inner{
+      max-width:var(--maxw); margin:0 auto; padding:48px 20px 36px;
+      display:grid; grid-template-columns: 1.2fr .8fr; gap:28px; align-items:center;
     }
-    article h2, article h3, article h4 {
-      color: var(--heading-color);
-      margin: 2em 0 0.8em;
-      line-height: 1.4;
-      scroll-margin-top: calc(var(--header-height) + 20px);
+    .hero h1{
+      margin:0 0 10px; font-size: clamp(26px, 3.2vw, 40px); line-height:1.25;
+      letter-spacing:.3px;
     }
-    article h2 {
-      font-size: 1.8em;
-      border-bottom: 2px solid var(--accent-color-1);
-      padding-bottom: 0.4em;
+    .hero p{ margin:0; color:var(--gray-600); font-size:clamp(14px, 1.8vw, 18px);}
+    .hero-badge{
+      display:inline-flex; align-items:center; gap:8px; font-size:12px; color:var(--teal);
+      background:#e9f7f7; border:1px solid #d2eeee; padding:6px 10px; border-radius:999px; margin-bottom:10px;
     }
-    article h3 {
-      font-size: 1.5em;
-      border-left: 5px solid var(--accent-color-1);
-      padding-left: 0.8em;
+    .hero-card{
+      background:#fff; border:1px solid #e7eef4; border-radius:16px; box-shadow:var(--shadow);
+      padding:18px 16px; display:flex; flex-direction:column; gap:8px;
     }
-    article h4 {
-      font-size: 1.2em;
-      color: var(--grey-color);
-      font-weight: bold;
-    }
-    article p {
-      margin-bottom: 1.2em;
-    }
-    article ul {
-      margin-bottom: 1.2em;
-      padding-left: 25px;
-    }
-    article li {
-      margin-bottom: 0.5em;
-    }
-    article strong {
-      color: var(--accent-color-1);
-    }
-    
-    /* Code Block Styles */
-    .code-block-wrapper {
-      position: relative;
-      margin: 1.5em 0;
-    }
-    article pre {
-      background-color: var(--code-bg);
-      color: var(--code-color);
-      padding: 20px;
-      border-radius: 6px;
-      overflow-x: auto;
-      font-family: 'Menlo', 'Consolas', 'Monaco', monospace;
-      font-size: 0.9em;
-      line-height: 1.5;
-    }
-    article code {
-        font-family: 'Menlo', 'Consolas', 'Monaco', monospace;
-        background-color: #eef1f2;
-        padding: 0.2em 0.4em;
-        border-radius: 3px;
-        font-size: 0.85em;
-    }
-    article pre code {
-      background-color: transparent;
-      padding: 0;
-      border-radius: 0;
-      font-size: 1em;
-    }
-    .copy-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background-color: #555;
-      color: #fff;
-      border: none;
-      padding: 5px 10px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: background-color 0.2s;
-    }
-    .copy-btn:hover {
-      background-color: var(--accent-color-2);
-    }
-    .copy-btn:active {
-      background-color: var(--accent-color-1);
+    .hero-card p{ margin:0; color:var(--gray-600); font-size:14px; }
+    .hero-card .dot{ width:8px; height:8px; border-radius:999px; background:var(--accent); display:inline-block; margin-right:6px; }
+
+    .wrap{ max-width:var(--maxw); margin:0 auto; padding:28px 20px 80px; display:grid; grid-template-columns: 280px 1fr; gap:28px; }
+    @media (max-width: 960px){
+      .hero-inner{ grid-template-columns:1fr; }
+      .wrap{ grid-template-columns: 1fr; }
     }
 
-    /* Footer */
-    .site-footer {
-      text-align: center;
-      padding: 30px 20px;
-      margin-top: 40px;
-      background-color: var(--header-bg);
-      color: var(--grey-color);
-      font-size: 0.9em;
-      border-top: 1px solid var(--border-color);
+    /* ---------- Sidebar (TOC / Summary) ---------- */
+    .toc{
+      position:sticky; top: calc(var(--header-h) + 18px);
+      background:#fff; border:1px solid #e7eef4; border-radius:var(--radius); padding:16px 14px;
+      box-shadow: var(--shadow);
     }
-    .footer-container {
-      max-width: 1200px;
-      margin: 0 auto;
+    .toc h3{ margin:0 0 10px; font-size:14px; color:var(--teal-600); letter-spacing:.2px; }
+    .toc nav a{
+      display:block; padding:8px 10px; margin:3px 0; border-radius:10px; font-size:14px; color:#2b3a44;
+      transition:background .2s, color .2s;
     }
-    
-    /* Responsive */
-    @media (max-width: 768px) {
-      .article-container {
-        padding: 25px;
-      }
-      .article-header h1 {
-        font-size: 2em;
-      }
-      article h2 {
-        font-size: 1.6em;
-      }
-      article h3 {
-        font-size: 1.3em;
-      }
-      .header-container {
-        flex-direction: column;
-        padding: 10px 0;
-      }
-      .site-header {
-        height: auto;
-      }
-      body {
-        padding-top: 60px; /* Adjust for potentially smaller header */
-      }
+    .toc nav a:hover{ background:#f0f8ff; color:#0b6aa8; }
+
+    /* ---------- Article Card ---------- */
+    article{
+      background:#ffffff; border:1px solid #e6edf3; border-radius:20px; box-shadow:var(--shadow);
+      overflow:hidden;
     }
+    .article-head{
+      padding:18px 22px; background:linear-gradient(180deg,#f7fbfe 0,#ffffff 100%); border-bottom:1px solid #e6edf3;
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+    }
+    .meta{
+      display:flex; align-items:center; gap:10px; color:var(--gray-600); font-size:13px;
+    }
+    .pill{
+      border:1px solid #d7ebff; background:#eef7ff; color:#0b6aa8; padding:6px 10px; border-radius:999px; font-size:12px;
+    }
+    .article-body{ padding:26px 22px 38px; }
+    .article-body h2{
+      margin:34px 0 12px; font-size:22px; border-left:4px solid var(--teal); padding-left:10px; line-height:1.4;
+    }
+    .article-body h3{ margin:22px 0 8px; font-size:18px; color:var(--gray-700); }
+    .article-body p{ margin:10px 0 12px; line-height:1.9; color:#25313b; }
+    .article-body ul{ margin:8px 0 18px; }
+    .article-body li{ margin:6px 0; }
+    blockquote{
+      margin:18px 0; padding:14px 16px; background:#f7fbfe; border-left:4px solid var(--accent); color:#244457; border-radius:10px;
+    }
+
+    /* ---------- Code Blocks with Copy ---------- */
+    pre{
+      position:relative; margin:14px 0 18px; border:1px solid #e6edf3; background:#0b1220; color:#f1f5f9;
+      border-radius:12px; overflow:auto; box-shadow: inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+    pre code{ display:block; padding:14px 16px; font-size:13px; line-height:1.6; }
+    .copy-btn{
+      position:absolute; top:8px; right:8px; border:none; background:#14213a; color:#e6f3ff; font-size:12px;
+      padding:6px 10px; border-radius:9px; cursor:pointer; transition:opacity .2s, transform .05s ease;
+      opacity:.9;
+    }
+    .copy-btn:hover{ opacity:1; }
+    .copy-btn:active{ transform:scale(.98); }
+    .code-label{
+      position:absolute; left:12px; top:8px; font-size:11px; color:#a8b3c6; letter-spacing:.3px;
+      background:rgba(255,255,255,.06); padding:3px 8px; border-radius:7px; border:1px solid rgba(255,255,255,.1);
+    }
+
+    /* ---------- Footer ---------- */
+    footer{
+      border-top:1px solid #e9eef3; background:#fff;
+    }
+    .footer-inner{
+      max-width:var(--maxw); margin:0 auto; padding:22px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+      color:var(--gray-600);
+    }
+    .brand{
+      font-weight:700; letter-spacing:.6px; color:var(--gray-700);
+    }
+    .brand .mark{ color:var(--teal); }
+    .pub{ font-size:14px; color:#475867; }
   </style>
 </head>
 <body>
-
-  <header class="site-header">
+  <!-- Header -->
+  <header class="site-header" role="banner">
     <div class="header-container">
-      <a href="/SideNote/" class="logo">
-        <span class="logo-teal">Side</span><span class="logo-grey">Note</span>
+      <a class="logo" href="/SideNote/" aria-label="SideNote トップへ">
+        <span class="logo-smart">Side</span><span class="logo-side">Note</span>
       </a>
-      <nav class="main-nav">
-        <ul>
-          </ul>
+      <nav class="main-nav" aria-label="メインナビゲーション">
       </nav>
     </div>
   </header>
 
-  <main class="main-content">
-    <article class="article-container">
-      <header class="article-header">
-        <h1 id="top-title">25.8.16 静的サイトで導入するサイト内検索：Lunr.js（自力）とAlgolia（外部）の2パターン解説 🔎 | SideNote</h1>
-      </header>
-      
-      <p>外部サービスに頼らず、無料でサイト内検索を実装する方法です。サイトの全ページの情報をまとめたJSONファイルを手動（またはスクリプトで）作成し、それを使って検索します。</p>
+  <!-- Hero -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-inner">
+      <div>
+        <span class="hero-badge" aria-hidden="true">🔎 静的サイト × 検索</span>
+        <h1 id="hero-title"><<<PAGE_TITLE>>></h1>
+        <p>25.8.16 静的サイトでも実現できる検索機能を、<strong>Lunr.js</strong> と <strong>Algolia</strong> の2パターンでわかりやすく解説します。 | SideNote</p>
+      </div>
+      <div class="hero-card" aria-label="この記事の要点">
+        <p><span class="dot"></span>外部サービスなしで完結：Lunr.js（小〜中規模向け）</p>
+        <p><span class="dot"></span>体験重視＆拡張性：Algolia（大規模・高度機能）</p>
+        <p><span class="dot"></span>実装ステップ／サンプルコード付き</p>
+      </div>
+    </div>
+  </section>
 
-      <h2 id="method-a">方法A：Lunr.js を使う（自力で完結させる方法） 🧰</h2>
+  <main role="main" class="wrap">
+    <!-- TOC -->
+    <aside class="toc" aria-label="目次">
+      <h3>目次</h3>
+      <nav id="toc-nav"></nav>
+    </aside>
 
-      <h3 id="step1">ステップ1：検索データ search-index.json を作成する</h3>
-      <p>まず、サイト内の検索対象にしたいページの情報をまとめたJSONファイルを作成します。作業は手動でもスクリプトでも構いませんが、このファイルが検索の核になります。</p>
+    <!-- Article -->
+    <article aria-labelledby="article-title">
+      <div class="article-head">
+        <div class="meta">
+          <span class="pill">Search Guide</span>
+          <span>公開日：</span>
+          <time id="published" data-published><<<PUBLISHED_AT>>></time>
+        </div>
+      </div>
+      <div class="article-body" id="article">
+        <h2 id="intro">静的サイトで導入するサイト内検索：Lunr.js（自力）とAlgolia（外部）の2パターン解説 🔎</h2>
+        <p>静的サイトでも、コンテンツ量が増えると「探しやすさ」が重要になります。本記事では、<strong>外部に依存しない Lunr.js</strong> と、<strong>高機能な外部サービス Algolia</strong> の2通りのアプローチを紹介します。</p>
 
-      <h4 id="json-example">search-index.json のイメージ（例）</h4>
-      <div class="code-block-wrapper">
-        <pre><code class="language-json">[
-  {
-    "id": 0,
-    "url": "/about.html",
-    "title": "このサイトについて",
-    "content": "このサイトの運営方針や目的について説明しています。..."
-  },
-  {
-    "id": 1,
-    "url": "/products/item01.html",
-    "title": "製品Aの紹介",
-    "content": "主力製品である製品Aの機能や特徴を詳しく解説します。..."
-  }
+        <h2 id="method-a">方法A：Lunr.js を使う（自力で完結させる方法） 🧰</h2>
+        <p>外部サービスに頼らず、無料でサイト内検索を実装する方法です。サイトの全ページの情報をまとめた JSON ファイルを作成し、それを使って検索します。</p>
+
+        <h3 id="step1">ステップ1：検索データ <code>search-index.json</code> を作成する</h3>
+        <p>サイト内の検索対象にしたいページの情報をまとめた JSON ファイルを作成します。手動でもスクリプトでもOK。このファイルが検索の核になります。</p>
+
+        <p><strong>search-index.json のイメージ（例）</strong></p>
+        <pre aria-label="search-index.json の例"><span class="code-label">JSON</span><button class="copy-btn" data-copy>Copy</button><code>[
+{
+  "id": 0,
+  "url": "/about.html",
+  "title": "このサイトについて",
+  "content": "このサイトの運営方針や目的について説明しています..."
+},
+{
+  "id": 1,
+  "url": "/products/item01.html",
+  "title": "製品Aの紹介",
+  "content": "主力製品である製品Aの機能や特徴を詳しく解説します..."
+}
 ]</code></pre>
-        <button class="copy-btn" title="Copy to clipboard">Copy</button>
-      </div>
-      <p><strong>ポイント：</strong> <code>id</code>は0から開始する連番、<code>url</code>はページパス、<code>title</code>と<code>content</code>は検索にヒットさせたい情報を要約して入れます。</p>
+        <ul>
+          <li><strong>id</strong> は 0 から開始する連番</li>
+          <li><strong>url</strong> はページパス</li>
+          <li><strong>title / content</strong> は検索にヒットさせたい要約</li>
+        </ul>
 
-      <h3 id="step2">ステップ2：HTMLに検索フォームと結果エリアを設置する</h3>
-      <h4 id="form-example">検索フォームの最低限の例：</h4>
-      <div class="code-block-wrapper">
-        <pre><code class="language-html">&lt;label for="search-input"&gt;サイト内を検索（2文字以上）🔎&lt;/label&gt;
-&lt;input type="search" id="search-input" placeholder="キーワードを入力..."&gt;
-&lt;ul id="results-container"&gt;&lt;/ul&gt;
-</code></pre>
-        <button class="copy-btn" title="Copy to clipboard">Copy</button>
-      </div>
+        <h3 id="step2">ステップ2：HTMLに検索フォームと結果エリアを設置する</h3>
+        <p>最低限の例：</p>
+        <pre aria-label="検索フォームのHTML例"><span class="code-label">HTML</span><button class="copy-btn" data-copy>Copy</button><code>&lt;form role="search" aria-label="サイト内検索"&gt;
+  &lt;label for="search-input"&gt;サイト内を検索（2文字以上）🔎&lt;/label&gt;
+  &lt;input id="search-input" name="q" type="search" placeholder="キーワードを入力" /&gt;
+  &lt;ul id="results-container" aria-live="polite"&gt;&lt;/ul&gt;
+&lt;/form&gt;</code></pre>
 
-      <h3 id="step3">ステップ3：JavaScriptを記述する（Lunr.jsを使用）</h3>
-      <p>以下のスクリプトを追加します。まずは Lunr.js 本体を読み込む必要があります（例：CDN）。</p>
-      <h4 id="js-example">以下は記事中のサンプルコードです（抜粋）。実際は <code>&lt;script src="..."&gt;&lt;/script&gt;</code> をページに含めてください。</h4>
-      <div class="code-block-wrapper">
-        <pre><code class="language-html">&lt;script src="https://unpkg.com/lunr/lunr.min.js"&gt;&lt;/script&gt;
+        <h3 id="step3">ステップ3：JavaScriptを記述する（Lunr.jsを使用）</h3>
+        <p>以下のサンプルは Lunr.js を使った最小構成です（<code>&lt;script src="..."&gt;</code> で本体読込が必要）。</p>
+        <pre aria-label="Lunr.js を使った検索スクリプト例"><span class="code-label">JS</span><button class="copy-btn" data-copy>Copy</button><code>&lt;script src="https://unpkg.com/lunr/lunr.min.js"&gt;&lt;/script&gt;
 &lt;script&gt;
 (async function() {
   const searchInput = document.getElementById('search-input');
   const resultsContainer = document.getElementById('results-container');
-  
-  // 1. 検索用JSONをフェッチ
   const response = await fetch('/search-index.json');
   const documents = await response.json();
-  
-  // 2. Lunr.jsのインデックスを作成
+
   const idx = lunr(function () {
     this.ref('id');
     this.field('title');
     this.field('content');
-    
-    documents.forEach(function (doc) {
-      this.add(doc);
-    }, this);
+    documents.forEach(function (doc) { this.add(doc); }, this);
   });
-  
-  // 3. 入力イベントをリッスン
+
   searchInput.addEventListener('input', function (event) {
     const query = event.target.value;
     resultsContainer.innerHTML = '';
-    
-    if (query.length &lt; 2) return; // 2文字以上で検索
-    
+    if (query.length &lt; 2) return;
+
     const results = idx.search(query);
-    
     if (results.length &gt; 0) {
       results.forEach(function (result) {
         const item = documents.find(doc =&gt; doc.id == result.ref);
@@ -372,56 +299,97 @@
   });
 })();
 &lt;/script&gt;</code></pre>
-        <button class="copy-btn" title="Copy to clipboard">Copy</button>
+        <p>この方法はページ数が数十〜百ページ程度であれば十分に実用的です。</p>
+
+        <h2 id="method-b">方法B：Algolia を使う（高機能な外部サービス） ☁️</h2>
+        <p>高性能な外部検索サービスを利用するパターンです。インデックス作成、ランキング、ファセット検索など高度な機能を提供します。規模が大きいサイトや検索体験を重視する場合に有利です。</p>
+
+        <h3 id="benefits">Algolia のメリット</h3>
+        <ul>
+          <li>高速でスケーラブルな検索</li>
+          <li>ランキング / ファセット / レコメンドなどの高度機能</li>
+          <li>ホスティングやセキュリティ面の利便性</li>
+        </ul>
+
+        <h3 id="caveats">Algolia の注意点</h3>
+        <ul>
+          <li>利用料金が発生（無料枠はあるが制限あり）</li>
+          <li>外部サービスへの依存</li>
+        </ul>
+
+        <h2 id="summary">まとめ ✅</h2>
+        <blockquote>
+          小〜中規模の静的サイトでコストを抑え自前で完結させたいなら <strong>Lunr.js</strong>。<br />
+          検索体験・性能・運用性を重視するなら <strong>Algolia</strong> を検討。
+        </blockquote>
       </div>
-      <p>この方法はページ数が数十〜百ページ程度であれば十分に実用的です。</p>
-
-      <h2 id="method-b">方法B：Algolia を使う（高機能な外部サービス） ☁️</h2>
-      <p>高性能な外部サービスを利用するパターンです。サーバー側でインデックスを作成したり、フロントエンド向けAPIキーの管理、ランキングやファセット検索など高度な機能が使えます。規模が大きいサイトや検索体験を重視する場合に有利です。</p>
-
-      <h3 id="algolia-merits">Algolia のメリット</h3>
-      <ul>
-        <li>高速でスケーラブルな検索</li>
-        <li>ランキング/ファセット/レコメンドなどの高度機能</li>
-        <li>ホスティングやセキュリティ面の利便性</li>
-      </ul>
-
-      <h3 id="algolia-cautions">Algolia の注意点</h3>
-      <ul>
-        <li>利用料金が発生する（無料枠はあるが制限あり）</li>
-        <li>外部サービスに依存する設計になる</li>
-      </ul>
-
-      <h2 id="summary">まとめ ✅</h2>
-      <p>小〜中規模の静的サイトでコストを抑え自前で完結させたいなら <strong>Lunr.js</strong> が現実的です。一方、検索体験・性能・運用性を重視する場合は <strong>Algolia</strong> を検討しましょう。</p>
     </article>
   </main>
 
-  <footer class="site-footer">
-    <div class="footer-container">
-      <span>YaMac33</span> &copy; 
-      <time datetime="2025-08-16">2025/08/16</time>
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div class="footer-inner">
+      <div class="brand" aria-label="サイトロゴ">Ya<span class="mark">Mac</span>33</div>
+      <div class="pub">Published: <time id="published-footer" data-published><<<PUBLISHED_AT>>></time></div>
     </div>
   </footer>
 
+  <!-- Page JS (vanilla) -->
   <script>
-    document.querySelectorAll('.copy-btn').forEach(button => {
-      button.addEventListener('click', () => {
-        const pre = button.previousElementSibling;
-        const code = pre.querySelector('code');
-        const text = code.innerText;
+    // 1) Publish date: set proper datetime="YYYY-MM-DD" from visible "YYYY/MM/DD"
+    (function(){
+      function setDatetime(el){
+        if(!el) return;
+        var text = (el.textContent || '').trim();
+        if(!text) return;
+        var iso = text.replace(/\//g,'-');
+        el.setAttribute('datetime', iso);
+      }
+      setDatetime(document.getElementById('published'));
+      setDatetime(document.getElementById('published-footer'));
+    })();
 
-        navigator.clipboard.writeText(text).then(() => {
-          button.innerText = 'Copied!';
-          setTimeout(() => {
-            button.innerText = 'Copy';
-          }, 2000);
-        }).catch(err => {
-          console.error('Failed to copy text: ', err);
-        });
+    // 2) Build TOC from h2/h3
+    (function(){
+      var container = document.getElementById('toc-nav');
+      if(!container) return;
+      var headings = document.querySelectorAll('.article-body h2, .article-body h3');
+      if(!headings.length) return;
+      var frag = document.createDocumentFragment();
+      headings.forEach(function(h){
+        if(!h.id){
+          h.id = h.textContent.trim().toLowerCase().replace(/\s+/g,'-').replace(/[^\w\-]/g,'');
+        }
+        var a = document.createElement('a');
+        a.href = '#'+h.id;
+        a.textContent = h.textContent;
+        if(h.tagName.toLowerCase()==='h3'){ a.style.paddingLeft='16px'; }
+        frag.appendChild(a);
       });
-    });
-  </script>
+      container.appendChild(frag);
+    })();
 
+    // 3) Copy buttons for code blocks
+    (function(){
+      var pres = document.querySelectorAll('pre');
+      pres.forEach(function(pre){
+        var btn = pre.querySelector('.copy-btn');
+        var code = pre.querySelector('code');
+        if(btn && code){
+          btn.addEventListener('click', async function(){
+            try{
+              await navigator.clipboard.writeText(code.textContent);
+              var original = btn.textContent;
+              btn.textContent = 'Copied!';
+              btn.disabled = true;
+              setTimeout(function(){ btn.textContent = original; btn.disabled = false; }, 1400);
+            }catch(e){
+              alert('コピーに失敗しました');
+            }
+          });
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
