@@ -13,17 +13,13 @@
     gtag('config', 'G-MQ9ZB4LYWP');
   </script>
 
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f8f9fa;
       margin: 0;
       padding: 80px 20px 20px; /* ヘッダー分の余白 */
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 30px;
     }
 
     .project-list {
@@ -42,11 +38,9 @@
       text-decoration: none;
       color: inherit;
     }
-
     .project-card:hover {
       transform: translateY(-5px);
     }
-
     .project-card h3 {
       font-size: 1.2em;
       margin: 16px;
@@ -61,27 +55,23 @@
       animation: spin 1s linear infinite;
       margin: 100px auto;
     }
-
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
-    a { 
-      text-decoration: none; 
-      color: inherit; 
-    }
+    a { text-decoration: none; color: inherit; }
 
-    /* ヘッダーのスタイル */
+    /* Header Styles */
     .site-header {
       background-color: #fff;
-      padding: 20px 20px;
+      padding: 20px;
       position: fixed;
       top: 0;
       width: 100%;
       z-index: 1000;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-
     .header-container {
       width: 100%;
       max-width: 1200px;
@@ -90,34 +80,17 @@
       justify-content: space-between;
       align-items: center;
     }
-
     .logo {
       font-size: 28px;
       font-weight: bold;
       letter-spacing: 1.5px;
       transition: color 0.3s;
     }
-
     .logo:hover { color: #00aaff; }
-
-    .main-nav ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-      display: flex;
-    }
-
+    .main-nav ul { margin: 0; padding: 0; list-style: none; display: flex; }
     .main-nav li { margin-left: 30px; }
-
-    .main-nav a {
-      font-size: 16px;
-      padding: 5px;
-      position: relative;
-      transition: color 0.3s;
-    }
-
+    .main-nav a { font-size: 16px; padding: 5px; position: relative; transition: color 0.3s; }
     .main-nav a:hover { color: #00aaff; }
-
     .main-nav a::after {
       content: '';
       position: absolute;
@@ -129,17 +102,9 @@
       transform: scaleX(0);
       transition: transform 0.3s;
     }
-
     .main-nav a:hover::after { transform: scaleX(1); }
-
-    /* ロゴのスタイル（Smart と SideNote を別色に） */
-    .logo-smart {
-      color: #008080;  /* ティール */
-    }
-
-    .logo-side {
-      color: #666666;  /* グレー */
-    }
+    .logo-smart { color: #008080; }
+    .logo-side { color: #666666; }
   </style>
 </head>
 <body>
@@ -150,44 +115,56 @@
         <span class="logo-smart">Side</span><span class="logo-side">Note</span>
       </a>
       <nav class="main-nav">
-        <ul>
-          </ul>
+        <ul></ul>
       </nav>
     </div>
   </header>
+  
+  <div class="max-w-2xl mx-auto my-8 px-4">
+      <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+              </svg>
+          </div>
+          <input type="search" id="searchInput" placeholder="サイト内を検索..." class="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out">
+      </div>
+  </div>
 
   <main id="project-list-container" class="project-list" aria-live="polite">
     <div class="loader"></div>
   </main>
 
+  <div id="searchResults" class="max-w-2xl mx-auto"></div>
   <script>
+    // --- 既存のコード: GitHub Repoから記事一覧を取得 ---
     const username = "YaMac33";
     const repoName = "SideNote";
+    const projectListContainer = document.getElementById("project-list-container");
 
     document.addEventListener("DOMContentLoaded", function () {
-      const container = document.getElementById("project-list-container");
-      container.innerHTML = '<div class="loader"></div>';
+      projectListContainer.innerHTML = '<div class="loader"></div>';
 
       fetch(`https://api.github.com/repos/${username}/${repoName}/contents/`)
         .then(response => response.json())
         .then(data => {
-          container.innerHTML = "";
+          projectListContainer.innerHTML = "";
           data.reverse();
-
-          // ▼▼▼▼▼ 変更点 ▼▼▼▼▼
-          // ディレクトリであり、かつ名前が「.」で始まらないものだけを抽出
           const visibleDirs = data.filter(item => item.type === "dir" && !item.name.startsWith('.'));
           
+          if (visibleDirs.length === 0) {
+            projectListContainer.innerHTML = "<p>まだ記事がありません。</p>";
+            return;
+          }
+
           visibleDirs.forEach(item => {
-          // ▲▲▲▲▲ 変更ここまで ▲▲▲▲▲
             const dirName = item.name;
             const card = document.createElement("a");
             card.href = `./${dirName}/`;
             card.className = "project-card";
             card.innerHTML = `<h3>読み込み中...</h3>`;
-            container.appendChild(card);
+            projectListContainer.appendChild(card);
 
-            // ページタイトル取得
             const indexUrl = `https://raw.githubusercontent.com/${username}/${repoName}/main/${dirName}/index.html`;
             fetch(indexUrl)
               .then(res => res.text())
@@ -202,10 +179,110 @@
           });
         })
         .catch(error => {
-          container.innerHTML = "<p>データの読み込みに失敗しました。</p>";
+          projectListContainer.innerHTML = "<p>記事一覧の読み込みに失敗しました。</p>";
           console.error("Error fetching repository contents:", error);
         });
     });
+
+
+    // --- ▼▼▼▼▼ 追加コード: サイト内検索機能 ---
+    const searchInput = document.getElementById('searchInput');
+    const searchResultsContainer = document.getElementById('searchResults');
+    const SEARCH_INDEX_URL = './search-index.json';
+    let searchIndex = [];
+
+    async function loadSearchIndex() {
+      try {
+        const response = await fetch(SEARCH_INDEX_URL);
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        searchIndex = await response.json();
+        console.log('Search index loaded.');
+      } catch (error) {
+        console.error('Failed to load search index:', error);
+      }
+    }
+
+    function performSearch(query) {
+      if (!query.trim()) {
+        searchResultsContainer.innerHTML = '';
+        searchResultsContainer.style.display = 'none';
+        projectListContainer.style.display = 'grid'; // 記事一覧を再表示
+        return;
+      }
+
+      projectListContainer.style.display = 'none'; // 記事一覧を非表示
+      searchResultsContainer.style.display = 'block'; // 検索結果を表示
+
+      const lowerCaseQuery = query.toLowerCase();
+      const results = searchIndex.filter(item => 
+          item.title.toLowerCase().includes(lowerCaseQuery) || 
+          item.content.toLowerCase().includes(lowerCaseQuery)
+      );
+
+      displayResults(results, query);
+    }
+
+    function displayResults(results, query) {
+      searchResultsContainer.innerHTML = '';
+      if (results.length === 0) {
+        searchResultsContainer.innerHTML = `<p class="text-center text-gray-500">「${escapeHTML(query)}」に一致する結果は見つかりませんでした。</p>`;
+      } else {
+        const resultList = document.createElement('ul');
+        resultList.className = 'space-y-4';
+        results.forEach(result => {
+          const listItem = document.createElement('li');
+          listItem.className = 'bg-white p-4 rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200';
+          const link = document.createElement('a');
+          link.href = result.url;
+          link.className = 'block';
+          const title = document.createElement('h3');
+          title.className = 'text-lg font-semibold text-indigo-600';
+          title.innerHTML = highlightMatches(result.title, query);
+          const snippet = document.createElement('p');
+          snippet.className = 'text-sm text-gray-600 mt-1';
+          snippet.innerHTML = createSnippet(result.content, query);
+          link.appendChild(title);
+          link.appendChild(snippet);
+          listItem.appendChild(link);
+          resultList.appendChild(listItem);
+        });
+        searchResultsContainer.appendChild(resultList);
+      }
+    }
+
+    function highlightMatches(text, query) {
+      if (!query.trim()) return escapeHTML(text);
+      const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+      return escapeHTML(text).replace(regex, '<mark class="bg-yellow-200 rounded-sm px-1">$1</mark>');
+    }
+
+    function createSnippet(content, query) {
+      const lowerCaseContent = content.toLowerCase();
+      const lowerCaseQuery = query.toLowerCase();
+      const index = lowerCaseContent.indexOf(lowerCaseQuery);
+      const snippetLength = 150;
+      let startIndex = Math.max(0, index - Math.floor(snippetLength / 2));
+      if (index === -1) startIndex = 0;
+      let snippetText = content.substring(startIndex, startIndex + snippetLength);
+      if (startIndex > 0) snippetText = '... ' + snippetText;
+      if (startIndex + snippetLength < content.length) snippetText += ' ...';
+      return highlightMatches(snippetText, query);
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m]);
+    }
+    
+    function escapeRegExp(str) {
+      return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadSearchIndex);
+
+    searchInput.addEventListener('input', () => {
+      performSearch(searchInput.value);
+    });
+    // --- ▲▲▲▲▲ 追加コードここまで ▲▲▲▲▲ ---
   </script>
 
 </body>
