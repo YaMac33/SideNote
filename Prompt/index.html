@@ -14,126 +14,55 @@
 <br><br>
 この条件をもとに、オリジナルの文章でブログ記事を書いてください。<br><br>
 
-あなたは、モダンなフロントエンド開発に精通した、実装に厳密なプロのエンジニアです。<br>
-以下の【前提条件】と【ページ要件】をすべて満たし、与えられた【ブログ記事本文】をHTML化した、完成形の index.html ファイルのコードのみを出力してください。
-<br><br>【前提条件】<br>
- * サイト構成:
-   * サーバーのルートディレクトリに /ai-comparison-test-site/ というフォルダがあり、その中に header.html と style.css が既に配置されています。
-   * GitHub Pagesでの公開を想定しており、サーバーサイドの処理（SSIなど）は利用できません。
- * 外部ファイル:
-   * /ai-comparison-test-site/header.html: サイト共通のヘッダー部分が記述されたHTMLファイルです。Google Analyticsのタグもこのファイル内に既に含まれています。
-   * /ai-comparison-test-site/style.css: サイト全体のスタイルを定義したCSSファイルです。以下の要素は既に定義済みです。
-     * モダンで洗練されたデザイン（レスポンシブ対応、落ち着いた配色とアクセントカラー、読みやすいフォント設定など）。
-     * .site-header, .header-container などのヘッダー関連クラス。
-     * 主要なHTMLタグ（h1, p, a など）の基本的なスタイルと、ホバー/クリック時のエフェクト。
-     * コンテンツのレイアウトを補助するクラス。
- * 技術制約:
-   * 追加CSSの禁止: 原則として style.css のみを使用します。JavaScriptで動きを実装するために必要最低限のインラインCSS（&lt;style&gt;タグ）の追加は許可しますが、20行以内に収めてください。
-   * 外部ライブラリの禁止: jQueryなどの外部JavaScriptフレームワークやライブラリは使用しないでください。素のJavaScript（Vanilla JS）で実装してください。
-<br><br>【ページ要件】<br>
- * HTML基本構造:
-   * 文字コードはUTF-8とし、&lt;!DOCTYPE html&gt;から&lt;/html&gt;まで、完全なHTML構造で記述してください。
-   * &lt;head&gt;内で/ai-comparison-test-site/style.cssを1回だけ読み込んでください（重複読み込みは禁止）。
-   * モバイルフレンドリーにするため、適切なmeta viewportタグを設定してください。
- * コンテンツとレイアウト:
-   * 【ブログ記事本文】の内容を分析し、最も適切で魅力的な日本語のページタイトルを&lt;title&gt;タグに設定してください。
-   * &lt;h1&gt;, &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;blockquote&gt;などのタグを適切に使い分け、論理的でセマンティックな文書構造を構築してください。
-   * 記事内に画像URLがある場合は、&lt;figure&gt;, &lt;img&gt;, &lt;figcaption&gt;を使い、alt属性を必ず設定してください。画像はレスポンシブに対応させ（例: max-width: 100%）、常に親要素の幅を超えないようにしてください。
-   * 記事内にURLがある場合は、必ずクリック可能なリンク（&lt;a&gt;タグ）にし、リンクテキストと共にURL自体も併記してください。
-   * 固定ヘッダーがコンテンツに重ならないよう、本文の開始位置には適切な余白（paddingやmargin）を確保してください。
- * JavaScriptによる動的機能（すべて実装必須）:
-   * ヘッダーの動的読み込み: &lt;body&gt;の最上部に&lt;div id="header-mount"&gt;&lt;/div&gt;を配置します。JavaScriptのfetch APIとDOMParserを使い、/ai-comparison-test-site/header.htmlの内容を取得し、その中身だけを#header-mountに挿入してください。
-   * 目次の自動生成: ページ内の&lt;h2&gt;と&lt;h3&gt;見出しをすべて抽出し、記事の冒頭（&lt;h1&gt;の後）にアンカーリンク付きの目次（&lt;ul&gt;リスト）を動的に生成してください。各見出しには、リンク先となるユニークなidを自動で付与してください。
-   * スクロールアニメーション: IntersectionObserver APIを利用し、主要なセクションや見出しがビューポートに入った際に、フワッと表示される（フェードインする）アニメーションを実装してください。
-   * 「トップへ戻る」ボタン: ページがある程度（例: 1画面分）スクロールされたら、画面の右下に「トップへ戻る」ボタンをフェードインで表示してください。このボタンをクリックすると、ページの最上部へスムーズスクロール（behavior: 'smooth'）で移動するように実装してください。
- * 品質とアクセシビリティ:
-   * コードコメント: HTML、CSS、JavaScriptの各処理ブロックには、後から他の人が読んでも分かりやすいように、要点を的確にコメントで記述してください。
-   * 絵文字: 記事の雰囲気を高めるために、見出しやリストの項目などに絵文字を効果的かつ控えめに使用してください。
-   * アクセシビリティ: alt属性の適切な設定、aria-labelの使用、キーボードでの操作性など、基本的なWebアクセシビリティに配慮してください。
-<br><br>【ブログ記事本文】
+あなたは、モダンなフロントエンド実装に厳密なプロのエンジニアです。<br>
+以下の条件をすべて満たし、完成形のブログ記事ページ（index.html）のHTMLコードのみを出力してください。説明文は一切不要です。<br><br>
 
+【前提条件】<br>
+- GitHub Pages などで静的配信する。Jekyll等は使わない。<br>
+- header.html / footer.html / style.css は使わず、このページだけで完結させる（インラインCSS）。<br>
+- 各記事ページのレイアウトやデザインは毎回異なってよい（自由に美しく仕上げる）。<br>
+- ヘッダーのロゴテキストは必ず "SideNote" として配置し、サイトトップ（"/"）へリンク。<br>
+- Google アナリティクス（GA4）の計測IDは "G-MQ9ZB4LYWP"。推奨スニペットを <head> に一度だけ挿入すること。<br>
+- フッターにはロゴテキスト "YaMac33" を表示し、公開日を "YYYY/MM/DD" 形式で併記すること。<br>
+  - 公開日はプロンプトで渡す値を表示用 "YYYY/MM/DD" とし、<time> 要素の datetime 属性には "YYYY-MM-DD"（ISO）を入れる。<br>
+- 外部ライブラリや外部CSSは使わない（バニラJSのみ可）。<br><br>
 
+【出力仕様】<br>
+- 完成した index.html のみを出力すること。<br>
+- <html lang="ja">、<meta charset="UTF-8">、<meta name="viewport"> を含める。<br>
+- <title> はページ固有のタイトルを設定。<br>
+- <meta name="description"> を設定（未指定なら本文冒頭から自然な要約を生成可）。<br>
+- 必要に応じて OG/Twitter 用の最低限のメタを追加可（外部画像不要）。<br>
+- セマンティックな構造（<header> / <main> / <article> / <footer>）。<br>
+- 本文は見出し・段落・箇条書き・引用・コード・画像等を適切に整形。Markdownが渡された場合は正しくHTML化。<br>
+- 見出しには id を自動付与して目次（任意）やアンカーリンクが使えるようにする。<br>
+- コードブロックにはコピー用ボタン（バニラJS）を設けてもよい。<br>
+- レスポンシブ（モバイル優先）。ダーク/ライト両環境でも読みやすい配色・コントラスト。<br>
+- 画像が本文に含まれる場合、alt を必ず付与（無ければ文脈から生成）。<br>
+- 本文に <h1> が含まれる場合はそれを本文先頭に置き、含まれない場合はタイトルを <h1> として本文内に追加し、<title> と重複しないようにする。<br><br>
 
-<br><br>① 単一のブログ記事ページ用プロンプト（index.html）<br><br>
+【必須スニペット（<head> 内に一度だけ）】<br>
+- Google Analytics（計測ID: G-MQ9ZB4LYWP）<br>
+  - 以下をそのまま挿入すること（IDは書き換えない）:<br>
+    <script async src="[https://www.googletagmanager.com/gtag/js?id=G-MQ9ZB4LYWP](https://www.googletagmanager.com/gtag/js?id=G-MQ9ZB4LYWP)"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-MQ9ZB4LYWP');
+    </script>
 
-あなたはフロントエンド実装に厳密なエンジニアです。以下の条件で、完成した index.html のみを出力してください。<br><br>
+<br><br>【ページに埋め込むデータ】
+<br>- ページタイトル：<<<PAGE_TITLE>>>
+<br>- 公開日（YYYY/MM/DD）：<<<PUBLISHED_AT>>>   （例: 2025/08/16）
+<br>- メタ説明（任意）：<<<META_DESCRIPTION>>>   （無ければ生成可）
+<br>- ブログ記事本文（MarkdownまたはHTML）：<<<ARTICLE_BODY>>>
 
-【サイト構成・前提】<br>
-- 既に /ai-comparison-test-site/header.html と /ai-comparison-test-site/style.css が用意済み。
-- ヘッダーは header.html をフェッチして &lt;div id="header-mount"&gt;&lt;/div&gt; に挿入する（サーバーサイドInclude不可、GitHub Pages前提）。
-- 追加のCSSは原則禁止。必要最小限のインラインCSSのみ可（20行以内）。外部フレームワーク不可。
-- すでに style.css に .site-header（固定ヘッダー）、.header-container、.logo、.main-nav、.project-list、.project-card などが存在する。<br><br>
+<br><br>【重要な体裁ルール】
+<br>- CSS は必ず style にインライン記述。外部CSSやCDNは使わない。
+<br>- JS はバニラJSのみ、script でフッター直前に記述。ファイル分割しない。
+<br>- 相対パス前提で動くこと（GitHub Pagesでそのまま表示できる）。
+<br>- アクセシビリティを意識し、ランドマーク、見出し構造、フォーカス可視化、link :hover/:focus を整える。
 
-【ページ要件】<br>
-- 完成した index.html をUTF-8で、DOCTYPEから閉じタグまでフルで書くこと。
-- &lt;head&gt; 内で /ai-comparison-test-site/style.css を1回だけ読み込むこと（重複禁止）。
-- &lt;body&gt; の最上部に &lt;div id="header-mount"&gt;&lt;/div&gt; を置き、JSで header.html の &lt;header&gt; 内部だけを抽出して挿入すること。
-- 固定ヘッダーの重なり回避のため、本文コンテナは上部に十分な余白（既存の body padding を尊重）を確保。
-- 本文は論理構造（h1/h2/p/ul/ol/blockquote/code）を適切に使用。
-- モバイル最適化（meta viewport必須・横スクロール禁止）。
-- JSインタラクションを少なくとも3つ追加：
-  1) IntersectionObserverで見出し/セクションをフェードイン
-  2) 目次（自動生成：h2/h3 を抽出してアンカーリンク化）
-  3) ページ右下の「トップへ戻る」ボタンの表示/非表示＆スムーススクロール
-- 外部画像がある場合は &lt;figure&gt;&lt;img&gt;&lt;figcaption&gt; でレスポンシブ対応（max-width:100%）。
-- アクセシビリティ配慮（aria-label、alt、コントラスト、フォーカス可能要素）。
-- 絵文字は控えめに要所で使用。
-- すべてのJS/CSS/HTMLに要点コメントを入れる。
-- Google Analyticsは header.html 内に既にあるため index.html 側では追加しない（重複禁止）。<br><br>
-
-【実装詳細（重要）】<br>
-- ヘッダーの読み込みは fetch('/ai-comparison-test-site/header.html') → テキスト取得 → DOMParserでパース → &lt;header&gt;要素の中身を #header-mount に挿入。
-- 見出しへは id を自動付与（日本語可、空白はハイフンに置換）。
-- スムーススクロールは scrollIntoView({behavior:'smooth'}) を使用。
-- CSSの追加が必要なら、インライン&lt;style&gt;を20行以内で記述（フェードイン用クラスなど最小限）。<br><br>
-
-【ページタイトル】<br>
-- 記事内容から日本語で自然なタイトルを設定。<br><br>
-
-【ブログ記事本文（これをHTML化）】<br>
-&lt;&lt;&lt;ここに元記事の本文テキストを貼り付け&gt;&gt;&gt;<br><br>
-
-以上を満たす「完成した index.html」だけを出力してください。<br><br>
-
----<br><br>
-
-② 記事一覧（カードグリッド）ページ用プロンプト（index.html）<br><br>
-
-※あなたのstyle.cssには .project-list / .project-card が既にあるので、それを活かす版。<br><br>
-
-あなたはフロントエンド実装に厳密なエンジニアです。以下の条件で、完成した index.html（記事一覧ページ）だけを出力してください。<br><br>
-
-【サイト構成・前提】<br>
-- /ai-comparison-test-site/header.html と /ai-comparison-test-site/style.css が既にある。
-- ヘッダーは header.html をフェッチして &lt;div id="header-mount"&gt;&lt;/div&gt; に挿入（GitHub Pages、SSI不可）。
-- 追加のCSSは禁止（必要最小限のインラインCSSのみ20行以内）。外部フレームワーク不可。<br><br>
-
-【ページ要件】<br>
-- DOCTYPEから閉じタグまでフルの index.html。
-- /ai-comparison-test-site/style.css を &lt;head&gt; で1回だけ読み込む（重複禁止）。
-- 固定ヘッダー考慮。本文は上部余白を確保。
-- メインに&lt;h1&gt;と、.project-list（CSSのグリッドを流用）を持つカード一覧を配置。
-- 各カード（.project-card）は a要素で全体クリック可能、タイトル（h3）、説明（p）、投稿日（time datetime属性付き）、タグ（ul/li）を含む。
-- 10〜30件のダミーデータをJSの配列から生成し、DOMで .project-list に差し込む方式にする（将来JSON差し替え想定）。
-- フィルタ/検索UIを上部に設置（入力でタイトル・タグに対して絞り込み）。
-- 並び替えのセレクタを用意（新着順/古い順/タイトルA→Z）。
-- IntersectionObserverでカードのフェードイン。カードhoverで持ち上がり（既存CSSの transform を活用）。
-- 右下に「トップへ戻る」ボタン。
-- すべてのJSにコメントを入れる。
-- Google Analyticsは header.html にあるため重複禁止。<br><br>
-
-【実装詳細（重要）】<br>
-- ヘッダー読み込みは fetch('/ai-comparison-test-site/header.html') → DOMParser で &lt;header&gt; を抽出し #header-mount に挿入。
-- 検索は入力の変化で即時フィルタ（toLowerCase、全角半角・カタカナ/ひらがな差は今回は未対応でOK）。
-- ソートはArray.sortで実装。日付は 'YYYY-MM-DD' をDateに変換して比較。
-- カードクリックで記事URLへ遷移（/ai-comparison-test-site/posts/slug/ を想定）。
-- アクセシビリティ：入力にlabel、カードにaria-label、画像があればalt。<br><br>
-
-【ページタイトル】<br>
-- 「記事一覧 | SmartSideNote」<br><br>
-
-【ダミーデータ（例）】<br>
-- title, slug, description, date (YYYY-MM-DD), tags (配列), optional: thumbnail<br><br>
-
-以上を満たす「完成した index.html」だけを出力してください。<br><br>
+<br><br>以上を満たし、完成済みの index.html のみを出力してください。<br><br>
 
