@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>静的サイトで導入するサイト内検索：Lunr.js（自力）とAlgolia（外部）の2パターン解説</title>
+  <meta name="description" content="静的サイトでサイト内検索を導入する2つの方法（Lunr.js と Algolia）を比較解説。小規模サイトは自前実装、大規模サイトは外部サービスが有利です。">
+  <meta property="og:title" content="静的サイトで導入するサイト内検索：Lunr.js（自力）とAlgolia（外部）の2パターン解説">
+  <meta property="og:description" content="静的サイトでサイト内検索を導入する2つの方法（Lunr.js と Algolia）を比較解説。小規模サイトは自前実装、大規模サイトは外部サービスが有利です。">
+  <meta name="twitter:card" content="summary">
+
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-MQ9ZB4LYWP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-MQ9ZB4LYWP');
+  </script>
+
+  <style>
+    :root {
+      --bg: #fff;
+      --fg: #222;
+      --accent: #0066cc;
+      --code-bg: #f4f4f4;
+      --border: #ddd;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #121212;
+        --fg: #eee;
+        --accent: #4da3ff;
+        --code-bg: #1e1e1e;
+        --border: #444;
+      }
+    }
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+    }
+    header, footer {
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      border-top: 1px solid var(--border);
+      padding: 1rem;
+      text-align: center;
+    }
+    header a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: bold;
+      font-size: 1.5rem;
+    }
+    main {
+      max-width: 860px;
+      margin: auto;
+      padding: 1rem;
+    }
+    nav#table-of-contents {
+      border: 1px solid var(--border);
+      padding: 1rem;
+      margin-bottom: 2rem;
+      background: var(--code-bg);
+    }
+    nav#table-of-contents ul {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+    }
+    nav#table-of-contents li {
+      margin: 0.25rem 0;
+    }
+    h1, h2, h3 {
+      scroll-margin-top: 4rem;
+    }
+    code {
+      background: var(--code-bg);
+      padding: 0.2em 0.4em;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+    pre {
+      background: var(--code-bg);
+      padding: 1rem;
+      overflow-x: auto;
+      border-radius: 6px;
+      position: relative;
+    }
+    pre button.copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      font-size: 0.8rem;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    a {
+      color: var(--accent);
+    }
+    a:hover, a:focus {
+      text-decoration: underline;
+    }
+    footer {
+      font-size: 0.9rem;
+      color: var(--fg);
+      margin-top: 3rem;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeIn 0.8s ease forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; transform: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/">SideNote</a>
+  </header>
+
+  <main>
+    <!-- 主見出し -->
+    <h1 id="main-title">静的サイトで導入するサイト内検索：Lunr.js（自力）とAlgolia（外部）の2パターン解説 🔎</h1>
+
+    <!-- 自動生成目次 -->
+    <nav id="table-of-contents" aria-label="目次"></nav>
+
+    <!-- 記事本文 -->
+    <article id="article-body">
+      <section class="fade-in">
+        <h2 id="method-a">方法A：Lunr.js を使う（自力で完結させる方法） 🧰</h2>
+        <p>外部サービスに頼らず、無料でサイト内検索を実装する方法です。サイトの全ページの情報をまとめたJSONファイルを手動（またはスクリプトで）作成し、それを使って検索します。</p>
+        <h3 id="step1">ステップ1：検索データ <code>search-index.json</code> を作成する</h3>
+        <p>まず、サイト内の検索対象にしたいページの情報をまとめたJSONファイルを作成します。作業は手動でもスクリプトでも構いませんが、このファイルが検索の核になります。</p>
+        <figure>
+          <figcaption>search-index.json のイメージ（例）</figcaption>
+        </figure>
+        <pre><button class="copy-btn" aria-label="コードをコピー">Copy</button><code aria-label="search-index.jsonの例">[
+{
+  "id": 0,
+  "url": "/about.html",
+  "title": "このサイトについて",
+  "content": "このサイトの運営方針や目的について説明しています。..."
+},
+{
+  "id": 1,
+  "url": "/products/item01.html",
+  "title": "製品Aの紹介",
+  "content": "主力製品である製品Aの機能や特徴を詳しく解説します。..."
+}
+]</code></pre>
+        <p><strong>ポイント：</strong> <em>id</em>は0から開始する連番、<em>url</em>はページパス、<em>title</em>と<em>content</em>は検索にヒットさせたい情報を要約して入れます。</p>
+
+        <h3 id="step2">ステップ2：HTMLに検索フォームと結果エリアを設置する</h3>
+        <p>検索フォームの最低限の例：</p>
+        <div>
+          <label for="search-input">サイト内を検索（2文字以上）🔎</label>
+          <input id="search-input" type="text" placeholder="サイト内を検索..." aria-label="サイト内検索" />
+          <ul id="results-container" aria-live="polite"></ul>
+        </div>
+
+        <h3 id="step3">ステップ3：JavaScriptを記述する（Lunr.jsを使用）</h3>
+        <p>以下のスクリプトを追加します。まずは Lunr.js 本体を読み込む必要があります（例：CDN）。</p>
+        <p>参考 CDN（クリックして別タブで開く）：<br>
+          <a href="https://unpkg.com/lunr/lunr.min.js">https://unpkg.com/lunr/lunr.min.js</a>
+        </p>
+        <blockquote>
+          <p>以下は記事中のサンプルコードです（抜粋）。実際は <code>&lt;script src="...">&lt;/script></code> をページに含めてください。</p>
+        </blockquote>
+        <pre><button class="copy-btn" aria-label="コードをコピー">Copy</button><code aria-label="lunrサンプル">&lt;script src="https://unpkg.com/lunr/lunr.min.js">&lt;/script>
+&lt;script>
+(async function() {
+  const searchInput = document.getElementById('search-input');
+  const resultsContainer = document.getElementById('results-container');
+  const response = await fetch('/search-index.json');
+  const documents = await response.json();
+  const idx = lunr(function () {
+    this.ref('id');
+    this.field('title');
+    this.field('content');
+    documents.forEach(function (doc) { this.add(doc); }, this);
+  });
+  searchInput.addEventListener('input', function (event) {
+    const query = event.target.value;
+    resultsContainer.innerHTML = '';
+    if (query.length &lt; 2) return;
+    const results = idx.search(query);
+    if (results.length > 0) {
+      results.forEach(function (result) {
+        const item = documents.find(doc => doc.id == result.ref);
+        const li = document.createElement('li');
+        li.innerHTML = '&lt;a href="' + item.url + '">' + item.title + '&lt;/a>';
+        resultsContainer.appendChild(li);
+      });
+    } else {
+      const noResult = document.createElement('li');
+      noResult.textContent = '該当するページは見つかりませんでした。';
+      resultsContainer.appendChild(noResult);
+    }
+  });
+})();
+&lt;/script></code></pre>
+        <p>この方法はページ数が数十〜百ページ程度であれば十分に実用的です。</p>
+      </section>
+
+      <section class="fade-in">
+        <h2 id="method-b">方法B：Algolia を使う（高機能な外部サービス） ☁️</h2>
+        <p>高性能な外部サービスを利用するパターンです。サーバー側でインデックスを作成したり、フロントエンド向けAPIキーの管理、ランキングやファセット検索など高度な機能が使えます。規模が大きいサイトや検索体験を重視する場合に有利です。</p>
+        <h3 id="algolia-advantages">Algolia のメリット</h3>
+        <ul>
+          <li>高速でスケーラブルな検索</li>
+          <li>ランキング/ファセット/レコメンドなどの高度機能</li>
+          <li>ホスティングやセキュリティ面の利便性</li>
+        </ul>
+        <h3 id="algolia-disadvantages">Algolia の注意点</h3>
+        <ul>
+          <li>利用料金が発生する（無料枠はあるが制限あり）</li>
+          <li>外部サービスに依存する設計になる</li>
+        </ul>
+      </section>
+
+      <section class="fade-in">
+        <h2 id="summary">まとめ ✅</h2>
+        <p>小〜中規模の静的サイトでコストを抑え自前で完結させたいなら <strong>Lunr.js</strong> が現実的です。一方、検索体験・性能・運用性を重視する場合は <strong>Algolia</strong> を検討しましょう。</p>
+        <blockquote>
+          <p>参考：記事内の Lunr.js CDN のURLは <a href="https://unpkg.com/lunr/lunr.min.js">https://unpkg.com/lunr/lunr.min.js</a> です。</p>
+        </blockquote>
+      </section>
+    </article>
+  </main>
+
+  <footer>
+    <div>YaMac33 | <time datetime="2025-08-16">2025/08/16</time></div>
+  </footer>
+
+  <script>
+    // 目次自動生成
+    (function() {
+      const toc = document.getElementById('table-of-contents');
+      const headings = document.querySelectorAll('#article-body h2, #article-body h3');
+      if (!headings.length) return;
+      const ul = document.createElement('ul');
+      headings.forEach(h => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = '#' + h.id;
+        a.textContent = h.textContent.replace(/🔎|🧰|☁️|✅/g,'').trim();
+        li.appendChild(a);
+        ul.appendChild(li);
+      });
+      toc.appendChild(ul);
+    })();
+
+    // コードコピー機能
+    document.querySelectorAll('pre button.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const code = btn.nextElementSibling.innerText;
+        navigator.clipboard.writeText(code).then(() => {
+          btn.textContent = 'Copied!';
+          setTimeout(() => btn.textContent = 'Copy', 1500);
+        });
+      });
+    });
+  </script>
+</body>
+</html>
