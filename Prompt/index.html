@@ -14,55 +14,88 @@
 <br><br>
 この条件をもとに、オリジナルの文章でブログ記事を書いてください。<br><br>
 
-あなたは、モダンなフロントエンド実装に厳密なプロのエンジニアです。<br>
-以下の条件をすべて満たし、完成形のブログ記事ページ（index.html）のHTMLコードのみを出力してください。説明文は一切不要です。<br><br>
+あなたは、モダンなフロントエンド実装に厳密なプロのエンジニアです。
+以下の条件をすべて満たし、完成形のブログ記事ページ（index.html）のHTMLコードのみを出力してください。説明文は一切不要です。
 
-【前提条件】<br>
-- GitHub Pages などで静的配信する。Jekyll等は使わない。<br>
-- header.html / footer.html / style.css は使わず、このページだけで完結させる（インラインCSS）。<br>
-- 各記事ページのレイアウトやデザインは毎回異なってよい（自由に美しく仕上げる）。<br>
-- ヘッダーのロゴテキストは必ず "SideNote" として配置し、サイトトップ（"/"）へリンク。<br>
-- Google アナリティクス（GA4）の計測IDは "G-MQ9ZB4LYWP"。推奨スニペットを <head> に一度だけ挿入すること。<br>
-- フッターにはロゴテキスト "YaMac33" を表示し、公開日を "YYYY/MM/DD" 形式で併記すること。<br>
-  - 公開日はプロンプトで渡す値を表示用 "YYYY/MM/DD" とし、<time> 要素の datetime 属性には "YYYY-MM-DD"（ISO）を入れる。<br>
-- 外部ライブラリや外部CSSは使わない（バニラJSのみ可）。<br><br>
+【前提条件】
+- GitHub Pages などで静的配信する（Jekyll等は使用しない）。
+- header.html / footer.html / style.css は使わず、このページだけで完結させる（インラインCSS）。
+- ヘッダーとフッターは全ページで共通感を保ち、トップページのヘッダー仕様を踏襲すること。
+- **本文部分はページごとに異なるレイアウト・配色・スタイルにするが、ヘッダー／フッターと視覚的に調和させること。**
 
-【出力仕様】<br>
-- 完成した index.html のみを出力すること。<br>
-- <html lang="ja">、<meta charset="UTF-8">、<meta name="viewport"> を含める。<br>
-- <title> はページ固有のタイトルを設定。<br>
-- <meta name="description"> を設定（未指定なら本文冒頭から自然な要約を生成可）。<br>
-- 必要に応じて OG/Twitter 用の最低限のメタを追加可（外部画像不要）。<br>
-- セマンティックな構造（<header> / <main> / <article> / <footer>）。<br>
-- 本文は見出し・段落・箇条書き・引用・コード・画像等を適切に整形。Markdownが渡された場合は正しくHTML化。<br>
-- 見出しには id を自動付与して目次（任意）やアンカーリンクが使えるようにする。<br>
-- コードブロックにはコピー用ボタン（バニラJS）を設けてもよい。<br>
-- レスポンシブ（モバイル優先）。ダーク/ライト両環境でも読みやすい配色・コントラスト。<br>
-- 画像が本文に含まれる場合、alt を必ず付与（無ければ文脈から生成）。<br>
-- 本文に <h1> が含まれる場合はそれを本文先頭に置き、含まれない場合はタイトルを <h1> として本文内に追加し、<title> と重複しないようにする。<br><br>
+【ヘッダー仕様（必須）】
+- ヘッダーは固定表示（position: fixed）、背景色は #fff、左右パディング20px。
+- max-width:1200px のコンテナでロゴとナビを左右に配置（flex）。
+- ロゴは &quot;SideNote&quot; を2色で表現：
+  - 「Side」は color: #008080（ティール）
+  - 「Note」は color: #666666（グレー）
+- ロゴ全体を &lt;a href=&quot;/SideNote/&quot;&gt; にリンク。
+- ナビゲーションは ul/li/a 構造、hover時は color:#00aaff＋下線アニメーション。
+- 以下のCSSを基準に生成：
+.site-header {
+background-color: #fff;
+padding: 20px 20px;
+position: fixed;
+top: 0;
+width: 100%;
+z-index: 1000;
+}
+.header-container {
+max-width: 1200px;
+margin: 0 auto;
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.logo { font-size: 28px; font-weight: bold; letter-spacing: 1.5px; transition: color 0.3s; }
+.logo:hover { color: #00aaff; }
+.main-nav ul { margin: 0; padding: 0; list-style: none; display: flex; }
+.main-nav li { margin-left: 30px; }
+.main-nav a { font-size: 16px; padding: 5px; position: relative; transition: color 0.3s; }
+.main-nav a:hover { color: #00aaff; }
+.main-nav a::after {
+content: '';
+position: absolute;
+width: 100%;
+height: 2px;
+background-color: #00aaff;
+bottom: -5px;
+left: 0;
+transform: scaleX(0);
+transition: transform 0.3s;
+}
+.main-nav a:hover::after { transform: scaleX(1); }
+.logo-smart { color: #008080; }
+.logo-side { color: #666666; }
 
-【必須スニペット（<head> 内に一度だけ）】<br>
-- Google Analytics（計測ID: G-MQ9ZB4LYWP）<br>
-  - 以下をそのまま挿入すること（IDは書き換えない）:<br>
-    <script async src="[https://www.googletagmanager.com/gtag/js?id=G-MQ9ZB4LYWP](https://www.googletagmanager.com/gtag/js?id=G-MQ9ZB4LYWP)"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-MQ9ZB4LYWP');
-    </script>
+【フッター仕様】
+- &lt;footer&gt; に &quot;YaMac33&quot; のロゴテキストと公開日を表示。
+- 公開日は &quot;YYYY/MM/DD&quot; で表示し、&lt;time datetime=&quot;YYYY-MM-DD&quot;&gt; を使う。
+- 配色・書体はヘッダーと統一感のあるものにする。
 
-<br><br>【ページに埋め込むデータ】
-<br>- ページタイトル：<<<PAGE_TITLE>>>
-<br>- 公開日（YYYY/MM/DD）：<<<PUBLISHED_AT>>>   （例: 2025/08/16）
-<br>- メタ説明（任意）：<<<META_DESCRIPTION>>>   （無ければ生成可）
-<br>- ブログ記事本文（MarkdownまたはHTML）：<<<ARTICLE_BODY>>>
+【本文仕様】
+- **各ページごとに異なるレイアウトや配色にすること（必ずバリエーションを出す）。**
+- ヘッダー・フッターと自然に調和するデザインにする（配色や余白を合わせる）。
+- MarkdownまたはHTMLで与えられる本文を見やすくHTML化する。
+- 見出し、段落、箇条書き、引用、コード、画像などを適切にスタイル設定。
+- コードブロックにコピー用ボタンを付けてもよい（バニラJSのみ）。
 
-<br><br>【重要な体裁ルール】
-<br>- CSS は必ず style にインライン記述。外部CSSやCDNは使わない。
-<br>- JS はバニラJSのみ、script でフッター直前に記述。ファイル分割しない。
-<br>- 相対パス前提で動くこと（GitHub Pagesでそのまま表示できる）。
-<br>- アクセシビリティを意識し、ランドマーク、見出し構造、フォーカス可視化、link :hover/:focus を整える。
+【共通仕様】
+- Google アナリティクス（GA4）の計測ID &quot;G-MQ9ZB4LYWP&quot; を &lt;head&gt; に一度だけ挿入（推奨スニペットそのまま）。
+- 完成した index.html のみを出力。
+- &lt;html lang=&quot;ja&quot;&gt;、&lt;meta charset=&quot;UTF-8&quot;&gt;、&lt;meta name=&quot;viewport&quot;&gt; を含める。
+- &lt;title&gt; にページ固有のタイトルを設定。
+- &lt;meta name=&quot;description&quot;&gt; を設定（なければ本文冒頭から生成）。
+- セマンティック構造（&lt;header&gt; / &lt;main&gt; / &lt;article&gt; / &lt;footer&gt;）。
+- CSS は必ず &lt;style&gt; にインライン記述、外部ライブラリ不可。
+- JSは必要に応じてフッター直前にバニラJSで記述。
 
-<br><br>以上を満たし、完成済みの index.html のみを出力してください。<br><br>
+【ページに埋め込むデータ】
+- ページタイトル：&lt;&lt;&lt;PAGE_TITLE&gt;&gt;&gt;
+- 公開日（YYYY/MM/DD）：&lt;&lt;&lt;PUBLISHED_AT&gt;&gt;&gt;   （例: 2025/08/16）
+- メタ説明（任意）：&lt;&lt;&lt;META_DESCRIPTION&gt;&gt;&gt;   （無ければ生成可）
+- ブログ記事本文（MarkdownまたはHTML）：&lt;&lt;&lt;ARTICLE_BODY&gt;&gt;&gt;
 
+【必須スニペット（&lt;head&gt;内に一度だけ）】
+
+以上を満たし、完成済みの index.html のみを出力してください。
