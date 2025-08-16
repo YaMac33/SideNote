@@ -42,18 +42,38 @@
       color: var(--fg);
       line-height: 1.6;
     }
-    header, footer {
+    footer {
       background: var(--bg);
       border-bottom: 1px solid var(--border);
       border-top: 1px solid var(--border);
       padding: 1rem;
       text-align: center;
     }
-    header a {
-      text-decoration: none;
-      color: var(--accent);
-      font-weight: bold;
-      font-size: 1.5rem;
+    /* ヘッダーのスタイル */
+.site-header {
+    background-color: #fff;
+    padding: 20px 20px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.header-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    transition: color 0.3s;
+}
     }
     main {
       max-width: 860px;
@@ -125,7 +145,10 @@
 </head>
 <body>
   <header>
-    <a href="/SideNote/">SideNote</a>
+    <div class="header-container">
+    <a href="/SideNote/" class="logo">
+      <span class="logo-smart">Side</span><span class="logo-side">Note</span>
+    </a>
   </header>
 
   <main>
