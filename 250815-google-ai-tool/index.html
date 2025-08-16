@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>25.8.15 Googleの新AIツールが「調べる」を変える NotebookLMとCanvas解説 | SmartSideNote</title>
+    
+    <link rel="stylesheet" href="/ai-comparison-test-site/style.css">
+
+    <style>
+        /* JS: フェードインアニメーションの初期状態と終了状態 */
+        .fade-in-target {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-target.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* JS: トップへ戻るボタンの表示/非表示制御 */
+        #to-top-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1000; /* 他の要素より手前に表示 */
+            /* Note: ボタンの具体的なデザインは style.css 側にある前提 */
+        }
+        #to-top-btn.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-mount"></div>
+
+    <main class="container">
+
+        <header class="hero-header fade-in-target">
+            <h1>Googleの新しいAIツールが、<br>僕らの「調べる」を変えそう</h1>
+            <p>未来に乗り遅れないための、自分用の備忘録 ✍️</p>
+        </header>
+        
+        <section class="content-section fade-in-target">
+            <p>最近、Googleが発表した新しいAIツールが、なんだかすごいことになりそうだから、自分なりに情報を整理しておこうと思う。<strong>「Deep-research」とか「NotebookLM」</strong>とか、名前だけ聞いてもピンとこないけど、どうやら僕らの仕事や勉強の「調べる」っていう行為が、根本から変わるかもしれない。</p>
+        </section>
+
+        <nav id="table-of-contents" class="fade-in-target" aria-labelledby="toc-title">
+            <h2 id="toc-title">目次</h2>
+            <ul id="toc-list"></ul>
+        </nav>
+
+        <section class="content-section fade-in-target">
+            <h2>そもそも、何が新しくなったの？</h2>
+            <p>まず押さえておきたいのは、Googleが発表した新しいAIツール群が、ただの賢いチャットボットじゃないってこと。これらのツールの心臓部には、超高性能なAI<strong>「Gemini」</strong>が搭載されている。</p>
+            <p>すごいのは、AIが「知っていること」だけを話すんじゃなくて、Web検索の結果や専門的な資料みたいな<strong>「外部の新しい情報」をちゃんと読み込んで、それを根拠に答えてくれるようになったこと。この技術を「RAG（ラグ）」</strong>って言うらしい。</p>
+            <blockquote>
+                <h3>今までのAI</h3>
+                <p>頭の中の知識だけで頑張って答える秀才タイプ。最新情報や専門的な内容には少し弱いことも。</p>
+                <h3>新しいAI (RAG搭載)</h3>
+                <p>目の前の大量の資料やWebを瞬時に読み解いて答えるスーパーリサーチャー。根拠があって信頼性が高い。</p>
+            </blockquote>
+        </section>
+
+        <section class="content-section fade-in-target">
+            <h2>具体的に、どんなことができるようになる？</h2>
+            
+            <div id="notebooklm-section">
+                <h3>NotebookLM：自分だけのAI家庭教師</h3>
+                <p>これは、自分が持ってる資料（PDFとかテキストとか）を放り込むと、その内容を完璧に理解したAIが、いつでも質問に答えてくれるツール。</p>
+                <p>例えば、分厚い論文や、長ったらしい会議の議事録を読み込ませて、「この実験の結論って何だっけ？」とか「A社が一番こだわってたポイントを3つにまとめて」みたいに聞くと、ちゃんと資料に基づいて、引用元まで示しながら答えてくれる。</p>
+                <code>これって、もはや「自分専用の家庭教師」だよね。学生時代のレポート作成や、社会人の情報整理が、めちゃくちゃ楽になりそう。</code>
+            </div>
+
+            <div id="canvas-section">
+                <h3>Canvas：アイデア出しの壁打ち相手</h3>
+                <p>もう一つが「Canvas」。これは、オンラインのホワイトボードみたいなツールで、思いついたアイデアを付箋みたいにペタペタ貼って整理できる。</p>
+                <p>面白いのは、ここでもAIがサポートしてくれること。例えば、ブレストで出したアイデアをAIに見せて、「これらのアイデアをカテゴリ別に分けて」とか「新しい視点を追加して」って頼むと、パパッと整理してくれたり、自分では思いつかなかったような切り口を提案してくれたりする。</p>
+                <p>しかも、ビジュアルツールで人気の<strong>「FigJam」とも連携する</strong>みたいだから、チームでの共同作業もスムーズに進みそうだ。一人でうんうん唸る時間が、ぐっと減るかもしれない。</p>
+            </div>
+        </section>
+
+        <section class="content-section fade-in-target">
+            <h2>まとめ：僕らは「考える」ことに集中できる時代へ</h2>
+            <p>こうやって見ていくと、Googleが目指しているのは、単に作業を自動化することじゃないんだなって思う。これまで「情報収集」や「資料の読み込み」、「アイデアの整理」にかけていた膨大な時間をAIに任せることで、僕ら人間は、「その情報から何を考えるか」「どうやって新しい価値を生み出すか」っていう、もっとクリエイティブな部分に集中できるようになる。</p>
+            <p>AIを「仕事を奪う脅威」と見るか、「自分の能力を拡張してくれる最高の相棒」と見るか。僕は断然後者でありたいな。🚀</p>
+        </section>
+
+    </main>
+    
+    <button id="to-top-btn" aria-label="ページトップへ戻る">▲</button>
+
+
+    <script>
+      // DOMの読み込みが完了してからスクリプトを実行
+      document.addEventListener('DOMContentLoaded', () => {
+
+        /**
+         * 1. 共通ヘッダーの読み込みと挿入
+         * header.htmlをフェッチし、中身の<header>要素を#header-mountに挿入する
+         */
+        const loadHeader = async () => {
+          try {
+            // ヘッダーファイルをフェッチ
+            const response = await fetch('/ai-comparison-test-site/header.html');
+            if (!response.ok) throw new Error('Header not found');
+            const text = await response.text();
+            
+            // テキストをDOMとしてパース
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(text, 'text/html');
+            
+            // <header>要素を抽出
+            const headerElement = doc.querySelector('header');
+            
+            // #header-mountに<header>の中身を挿入
+            const headerMount = document.getElementById('header-mount');
+            if (headerMount && headerElement) {
+              headerMount.innerHTML = headerElement.innerHTML;
+            }
+          } catch (error) {
+            console.error('Failed to load header:', error);
+          }
+        };
+
+
+        /**
+         * 2. 目次の自動生成
+         * <main>内のh2, h3見出しを抽出し、アンカーリンク付きの目次リストを生成する
+         */
+        const generateTableOfContents = () => {
+          const tocList = document.getElementById('toc-list');
+          if (!tocList) return;
+
+          // <main>内からh2とh3を検索
+          const headings = document.querySelectorAll('main h2, main h3');
+          
+          headings.forEach(heading => {
+            // 目次用のh2は除外
+            if(heading.closest('#table-of-contents')) return;
+
+            const text = heading.textContent.trim();
+            // idを生成 (例: 「テキスト」 -> "テキスト")
+            const id = text.replace(/\s+/g, '-');
+            
+            // 見出しにidを付与
+            heading.id = id;
+            
+            // li要素とa要素を生成
+            const listItem = document.createElement('li');
+            const link = document.createElement('a');
+            
+            link.href = `#${id}`;
+            link.textContent = text;
+            
+            // スムーススクロールを実装
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                heading.scrollIntoView({ behavior: 'smooth' });
+            });
+
+            // 見出しレベルに応じてインデント
+            if (heading.tagName === 'H3') {
+                listItem.style.paddingLeft = '20px';
+            }
+
+            listItem.appendChild(link);
+            tocList.appendChild(listItem);
+          });
+        };
+
+
+        /**
+         * 3. Intersection Observer によるフェードインアニメーション
+         * .fade-in-targetクラスを持つ要素が画面内に入ったらis-visibleクラスを付与する
+         */
+        const setupFadeInAnimation = () => {
+          const targets = document.querySelectorAll('.fade-in-target');
+          const options = {
+            root: null, // ビューポートを基準にする
+            rootMargin: '0px',
+            threshold: 0.1 // 10%見えたら発火
+          };
+
+          const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                // is-visibleクラスを追加してアニメーションを発火
+                entry.target.classList.add('is-visible');
+                // 一度表示したら監視を解除してパフォーマンスを向上
+                observer.unobserve(entry.target);
+              }
+            });
+          }, options);
+
+          // 各ターゲット要素を監視
+          targets.forEach(target => {
+            observer.observe(target);
+          });
+        };
+
+        
+        /**
+         * 4. 「トップへ戻る」ボタンの表示/非表示とスムーススクロール
+         */
+        const setupBackToTopButton = () => {
+            const toTopBtn = document.getElementById('to-top-btn');
+            if (!toTopBtn) return;
+            
+            // スクロール量に応じてボタンの表示/非表示を切り替え
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    toTopBtn.classList.add('visible');
+                } else {
+                    toTopBtn.classList.remove('visible');
+                }
+            });
+
+            // ボタンクリックでページトップへスムーススクロール
+            toTopBtn.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        };
+
+        // --- 初期化処理の実行 ---
+        loadHeader();
+        generateTableOfContents();
+        setupFadeInAnimation();
+        setupBackToTopButton();
+
+      });
+    </script>
+</body>
+</html>
