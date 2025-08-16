@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>25.8.14 無人コンビニはなぜ思ったより増えない？ | SmartSideNote</title>
+  <!-- 既存の共通スタイルを読み込み（重複読み込みはしない） -->
+  <link rel="stylesheet" href="/ai-comparison-test-site/style.css" />
+
+  <!-- 本ページ専用の最小限スタイル（既存CSSにない要素のみ） -->
+  <style>
+    /* コンテンツ幅と余白（固定ヘッダーのためbody padding-topは既存CSSにあり） */
+    .container { max-width: 980px; margin: 0 auto; padding: 12px 16px 64px; }
+    .page-hero { text-align: center; margin: 20px auto 24px; }
+    .page-hero h1 { font-size: 2rem; line-height: 1.35; margin: 0 0 8px; }
+    .subtitle { color: #666; margin: 0 auto 8px; font-size: 1rem; }
+
+    /* セクション間の間隔 */
+    section { margin: 40px 0; }
+
+    /* フェードイン用のアニメーション */
+    .scroll-animate { opacity: 0; transform: translateY(16px); transition: opacity .6s ease, transform .6s ease; }
+    .in-view { opacity: 1; transform: translateY(0); }
+
+    /* 現実カードのグリッド */
+    .reality-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .reality-card { background: #fff; border-radius: 10px; box-shadow: 0 6px 14px rgba(0,0,0,.08); padding: 16px 18px; }
+    .reality-card h3 { margin: 4px 0 8px; font-size: 1.05rem; }
+    .reality-card p { margin: 0; color: #444; }
+
+    /* 未来カード（フリップ） */
+    .future-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; perspective: 1000px; }
+    .flip-card { background: transparent; height: 200px; }
+    .flip-card-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .6s ease; }
+    .flip-card:hover .flip-card-inner, .flip-card:focus-within .flip-card-inner { transform: rotateY(180deg); }
+    .flip-card-front, .flip-card-back { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 12px; box-shadow: 0 6px 14px rgba(0,0,0,.08); display: grid; place-items: center; padding: 14px; background: #fff; }
+    .flip-card-front { }
+    .flip-card-back { transform: rotateY(180deg); text-align: left; }
+    .flip-card h3 { margin: 6px 0 0; text-align: center; font-size: 1rem; }
+    .flip-card p { margin: 0; font-size: .95rem; color: #333; }
+    .flip-card-icon { width: 40px; height: 40px; margin-bottom: 6px; opacity: .8; }
+
+    /* まとめセクション */
+    .conclusion h2 { text-align: center; }
+    .conclusion p { line-height: 1.8; }
+
+    /* トップへ戻るボタン */
+    #backToTop { position: fixed; right: 16px; bottom: 20px; width: 44px; height: 44px; border: none; border-radius: 50%; box-shadow: 0 6px 14px rgba(0,0,0,.15); background: #00aaff; color: #fff; cursor: pointer; display: grid; place-items: center; opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s ease, transform .2s ease; }
+    #backToTop.show { opacity: 1; visibility: visible; }
+    #backToTop:active { transform: scale(0.96); }
+
+    /* 小さめ画面のタイポ調整 */
+    @media (max-width: 480px) { .page-hero h1 { font-size: 1.6rem; } }
+  </style>
+</head>
+<body>
+  <!-- 共通ヘッダーをマウントする領域（header.htmlから抽出して挿入） -->
+  <div id="header-mount" aria-label="サイト共通ヘッダー"></div>
+
+  <!-- ページヒーロー（記事タイトル） -->
+  <header class="page-hero container" role="banner">
+    <h1>「無人コンビニ」って、<br>なんで思ったより増えないんだろう？</h1>
+    <p class="subtitle">未来のお店について考える、自分のための備忘録</p>
+  </header>
+
+  <main class="container" role="main">
+    <section class="scroll-animate">
+      <p>最近、駅ナカやオフィスビルで「無人コンビニ」を見かけることが増えたよね。スマホでピッとかざして入って、レジを通さずに買い物ができるなんて、まさに未来の店！って感じでワクワクする。</p>
+      <p>でも、ふと思ったんだ。「こんなに便利なのに、どうして街中では普通に見かけないんだろう？」って。人手不足も深刻だし、もっと一気に普及しても良さそうなのに。気になって色々な記事を読んでみたら、その理由がなんとなく見えてきた。未来の自分のために、その「なぜ？」を整理しておこうと思う。</p>
+    </section>
+
+    <section>
+      <h2 class="scroll-animate">「無人」と言っても、<br>実は「完全な無人」じゃなかった</h2>
+      <div class="scroll-animate">
+        <p>これが一番大きなポイントかもしれない。僕らが「無人」と聞いてイメージするのは、店員さんが一人もいない全自動のお店。でも、今の無人コンビニは、実は<strong>「レジ業務が無人」</strong>なだけなんだよね。</p>
+        <p>JR東日本の「NewDays」も、お客さんがいない時に店員さんがやってきて、商品の補充や棚の整理、清掃をしている。そりゃそうだ、商品が勝手に棚に並ぶわけじゃないもんね。つまり、バックヤード業務はしっかり人の手に頼っている。だから「省人化」はできても、「無人化」はまだ先の話みたいだ。</p>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="scroll-animate">テクノロジーの「理想」と「現実」<br>にある大きなギャップ</h2>
+      <div class="reality-cards">
+        <div class="reality-card scroll-animate" aria-label="コストが高すぎる問題">
+          <h3>1. コストが高すぎる問題 💰</h3>
+          <p>高輪ゲートウェイ駅にある「TOUCH TO GO」の店舗は、AIカメラが客の動きを追跡して、手に取った商品を自動で認識してくれるスゴい技術。でも、このシステムの月額利用料は、なんと時給1200円の店員さんを17日間雇うのと同じくらいかかるらしい。これじゃあ、人件費削減のために導入したくても、二の足を踏んじゃうよね。</p>
+        </div>
+        <div class="reality-card scroll-animate" aria-label="精度がまだ完璧じゃない問題">
+          <h3>2. 精度がまだ完璧じゃない問題 🤔</h3>
+          <p>AIカメラの認識精度も、まだ100%じゃない。記事の筆者さんも、パンを1個しか取ってないのに2個として会計されそうになったって書いてた。もちろん修正はできるけど、これがお客さんにとって「面倒くさい」とか「信用できない」って思われたら致命的だ。アメリカの「Amazon Go」でも、誤請求のクレームが結構あったみたい。</p>
+        </div>
+        <div class="reality-card scroll-animate" aria-label="他の技術も道半ばの問題">
+          <h3>3. 他の技術も道半ばの問題 🚧</h3>
+          <p>じゃあAIカメラ以外の方法は？ってことで、昔、経産省が「RFID」っていうICタグを全ての商品に付けて、一瞬で会計を終わらせる構想を発表してた。でも、このICタグ自体のコストがなかなか下がらなかったり、技術的な問題があったりで、計画通りには進んでないのが現状。どの技術も、まだ理想に追いついてないんだね。</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="scroll-animate">「無人化」だけが答えじゃない？<br>未来のお店のいろんなカタチ</h2>
+      <div class="future-cards">
+        <div class="flip-card scroll-animate" tabindex="0" aria-label="ハイブリッド型 アバター店員">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <svg class="flip-card-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              <h3>ハイブリッド型<br>「アバター店員」</h3>
+            </div>
+            <div class="flip-card-back">
+              <p>ローソンが実験しているのが、遠隔操作のアバターが接客してくれるお店。これなら、店員さんは自宅からでも働けるし、一人で複数店舗の接客も可能になる。人の温かみを残しつつ、省人化も実現できる面白いアイデアだよね。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-card scroll-animate" tabindex="0" aria-label="課題解決特化型 スマートカート">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <svg class="flip-card-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c.51 0 .962-.328 1.09-.828l2.857-9.591c.118-.396-.036-.838-.431-.976l-15.176-4.832a1.125 1.125 0 00-1.342.378L2.25 3v11.25zM16.5 20.25a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.75 20.25a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" /></svg>
+              <h3>課題解決特化型<br>「スマートカート」</h3>
+            </div>
+            <div class="flip-card-back">
+              <p>スーパーの「トライアル」がやってるみたいに、店を無人にするんじゃなくて、客が使うカートにスキャナーを付けちゃう方法。お客さんは商品をカゴに入れながらピッてやって、レジを通らずにそのまま出られる。これなら「レジ待ち」っていう一番の不満だけをピンポイントで解決できる。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="flip-card scroll-animate" tabindex="0" aria-label="技術の外販型 Amazon Goの戦略転換">
+          <div class="flip-card-inner">
+            <div class="flip-card-front">
+              <svg class="flip-card-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" /></svg>
+              <h3>技術の外販型<br>「Amazon Goの戦略転換」</h3>
+            </div>
+            <div class="flip-card-back">
+              <p>あのAmazonでさえ、自分で無人コンビニを運営するのは大変だったみたいで、今では「Just Walk Out」っていう自分たちの技術を、他のスーパーとかに売るビジネスに力を入れている。自分たちで店を増やすんじゃなくて、技術で世界中の店をスマートにする方に舵を切ったんだね。</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="conclusion scroll-animate">
+      <h2>まとめ：未来は「ゼロか百か」じゃなかった</h2>
+      <p>なるほどなぁ。「無人コンビニが普及しない」って単純な話じゃなくて、コスト、技術、そして僕ら消費者の利便性っていう、いろんな要素が複雑に絡み合っていたんだ。「全部自動化！」っていうゼロか百かの未来じゃなくて、アバター店員やスマートカートみたいに、テクノロジーと人間がうまく役割分担する。そんな未来の方が、現実的なのかもしれない。</p>
+      <p>完全無人のお店が当たり前になる日はまだ先そうだけど、その過程で生まれてくる色々な新しいお店のカタチに、これからも注目していこうと思う。</p>
+    </section>
+  </main>
+
+  <!-- トップへ戻るボタン -->
+  <button id="backToTop" aria-label="トップへ戻る" title="トップへ戻る">↑</button>
+
+  <script>
+    // 1) 共通ヘッダーの読み込み（header.html から <header> 要素だけ抽出して挿入）
+    (async () => {
+      try {
+        const res = await fetch('/ai-comparison-test-site/header.html', { cache: 'no-store' });
+        const html = await res.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const header = doc.querySelector('header.site-header');
+        const mount = document.getElementById('header-mount');
+        if (header && mount) mount.appendChild(header);
+      } catch (e) { console.error('ヘッダーの読み込みに失敗しました', e); }
+    })();
+
+    // 2) IntersectionObserver で .scroll-animate を順次フェードイン
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.scroll-animate').forEach(el => io.observe(el));
+
+    // 3) トップへ戻るボタンの表示制御＆スムーススクロール
+    const backToTop = document.getElementById('backToTop');
+    const toggleBackToTop = () => {
+      const y = window.scrollY || document.documentElement.scrollTop;
+      if (y > 400) backToTop.classList.add('show'); else backToTop.classList.remove('show');
+    };
+    window.addEventListener('scroll', toggleBackToTop, { passive: true });
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    toggleBackToTop();
+  </script>
+</body>
+</html>
