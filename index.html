@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SideNote</title>
 
-  <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-MQ9ZB4LYWP"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -14,7 +13,6 @@
     gtag('config', 'G-MQ9ZB4LYWP');
   </script>
 
-  <!-- CSS統合 -->
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -146,7 +144,6 @@
 </head>
 <body>
 
-  <!-- ヘッダーを直接埋め込み -->
   <header class="site-header">
     <div class="header-container">
       <a href="/SideNote/" class="logo">
@@ -154,8 +151,7 @@
       </a>
       <nav class="main-nav">
         <ul>
-          <!-- 必要ならナビリンクをここに追加 -->
-        </ul>
+          </ul>
       </nav>
     </div>
   </header>
@@ -178,28 +174,31 @@
           container.innerHTML = "";
           data.reverse();
 
-          data.forEach(item => {
-            if (item.type === "dir") {
-              const dirName = item.name;
-              const card = document.createElement("a");
-              card.href = `./${dirName}/`;
-              card.className = "project-card";
-              card.innerHTML = `<h3>読み込み中...</h3>`;
-              container.appendChild(card);
+          // ▼▼▼▼▼ 変更点 ▼▼▼▼▼
+          // ディレクトリであり、かつ名前が「.」で始まらないものだけを抽出
+          const visibleDirs = data.filter(item => item.type === "dir" && !item.name.startsWith('.'));
+          
+          visibleDirs.forEach(item => {
+          // ▲▲▲▲▲ 変更ここまで ▲▲▲▲▲
+            const dirName = item.name;
+            const card = document.createElement("a");
+            card.href = `./${dirName}/`;
+            card.className = "project-card";
+            card.innerHTML = `<h3>読み込み中...</h3>`;
+            container.appendChild(card);
 
-              // ページタイトル取得
-              const indexUrl = `https://raw.githubusercontent.com/${username}/${repoName}/main/${dirName}/index.html`;
-              fetch(indexUrl)
-                .then(res => res.text())
-                .then(html => {
-                  const match = html.match(/<title>(.*?)<\/title>/i);
-                  const title = match ? match[1] : dirName;
-                  card.querySelector("h3").textContent = title;
-                })
-                .catch(() => {
-                  card.querySelector("h3").textContent = dirName;
-                });
-            }
+            // ページタイトル取得
+            const indexUrl = `https://raw.githubusercontent.com/${username}/${repoName}/main/${dirName}/index.html`;
+            fetch(indexUrl)
+              .then(res => res.text())
+              .then(html => {
+                const match = html.match(/<title>(.*?)<\/title>/i);
+                const title = match ? match[1] : dirName;
+                card.querySelector("h3").textContent = title;
+              })
+              .catch(() => {
+                card.querySelector("h3").textContent = dirName;
+              });
           });
         })
         .catch(error => {
