@@ -3,25 +3,24 @@ import path from 'path';
 import { glob } from 'glob';
 import { JSDOM } from 'jsdom';
 import lunr from 'lunr';
-// ▼▼▼▼▼ 変更点 ▼▼▼▼▼
-import TinySegmenter from 'tiny-segmenter'; 
-// ▲▲▲▲▲ 変更ここまで ▲▲▲▲▲
+import TinySegmenter from 'tiny-segmenter';
 
-const siteRoot = '/SideNote/';
-const outputDir = '/SideNote/';
+const siteRoot = './';
+const outputDir = './';
 
-// 日本語の分割ルールをLunr.jsに教える
-// TinySegmenterのインスタンス化は不要で、コンストラクタ自体を渡す
+// 日本語の分割ルールを定義
 const japaneseTokenizer = (token) => {
-  const segmenter = new TinySegmenter(); // トークンごとにインスタンス化
+  const segmenter = new TinySegmenter();
   return segmenter.segment(token.toString());
 };
-lunr.tokenizer.register('japaneseTokenizer', japaneseTokenizer);
+
+// ▼▼▼▼▼ 変更点① ▼▼▼▼▼
+// この行を削除します → lunr.tokenizer.register('japaneseTokenizer', japaneseTokenizer);
 
 async function createSearchIndex() {
   console.log('Starting to build search index...');
 
-  const files = await glob('**/SideNote/index.html', {
+  const files = await glob('**/index.html', {
     cwd: siteRoot,
     ignore: ['index.html', 'node_modules/**'],
   });
@@ -39,8 +38,8 @@ async function createSearchIndex() {
 
     const title = document.querySelector('title')?.textContent || 'No title';
     const body = document.querySelector('main')?.textContent || document.body.textContent || '';
-    
-    const url = `/SideNote/${file.replace(/index\.html$/, '')}`;
+
+    const url = `./${file.replace(/index\.html$/, '')}`;
 
     documents.push({
       id: url,
@@ -55,7 +54,11 @@ async function createSearchIndex() {
   }
 
   const idx = lunr(function () {
-    this.tokenizer = lunr.tokenizer.registered.japaneseTokenizer;
+    // ▼▼▼▼▼ 変更点② ▼▼▼▼▼
+    // 登録された名前を呼び出すのではなく、定義した関数を直接セットします
+    this.tokenizer = japaneseTokenizer;
+    // ▲▲▲▲▲ 変更ここまで ▲▲▲▲▲
+
     this.ref('id');
     this.field('title', { boost: 10 });
     this.field('body');
