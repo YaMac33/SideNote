@@ -3,7 +3,7 @@ import path from 'path';
 import { glob } from 'glob';
 import { JSDOM } from 'jsdom';
 import lunr from 'lunr';
-import { TinySegmenter } from 'tiny-segmenter'; // ★ 変更点
+import  TinySegmenter  from 'tiny-segmenter'; // ★ 変更点
 
 const siteRoot = './'; // サイトのルートをカレントディレクトリに変更
 const outputDir = './';
