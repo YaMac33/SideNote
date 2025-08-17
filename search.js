@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchResultsContainer = document.getElementById('searchResults');
   const projectListContainer = document.getElementById('project-list-container');
 
-  const LUNR_INDEX_URL = './lunr-index.json';
-  const DOC_STORE_URL = './document-store.json';
+  const LUNR_INDEX_URL = '/SideNote/lunr-index.json';
+  const DOC_STORE_URL = '/SideNote/document-store.json';
 
   let lunrIndex;
   let documentStore;
