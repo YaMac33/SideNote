@@ -137,7 +137,7 @@
 
   <header class="site-header">
     <div class="header-container">
-      <a href="/SideNote/" class="logo">
+      <a href="./" class="logo">
         <span class="logo-smart">Side</span><span class="logo-side">Note</span>
       </a>
       <nav class="main-nav">
@@ -186,7 +186,7 @@
           visibleDirs.forEach(item => {
             const dirName = item.name;
             const card = document.createElement("a");
-            card.href = `/SideNote/${dirName}/`;
+            card.href = `./${dirName}/`;
             card.className = "project-card";
             card.innerHTML = `<h3>読み込み中...</h3>`;
             projectListContainer.appendChild(card);
