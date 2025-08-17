@@ -30,11 +30,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Create search index
-        run: node scripts/create-index.js
-
-      - name: Check if index files are created
-        run: ls -l lunr-index.json document-store.json
+      - name: Build search index
+        run: npm run build:search
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
@@ -53,5 +50,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        
         uses: actions/deploy-pages@v4
