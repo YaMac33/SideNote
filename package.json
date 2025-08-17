@@ -1,16 +1,19 @@
 {
-  "name": "sidenote-search",
+  "name": "sidenote",
   "version": "1.0.0",
-  "description": "Search index generator for SideNote",
-  "main": "scripts/create-index.js",
-  "type": "module",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "build-index": "node scripts/create-index.js"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    // highlight-start
+    "build:search": "pagefind --site ."
+    // highlight-end
   },
-  "dependencies": {
-    "glob": "^10.3.10",
-    "jsdom": "^24.0.0",
-    "lunr": "^2.3.9",
-    "tiny-segmenter": "^0.2.0"
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@pagefind/default-ui": "^1.1.0",
+    "pagefind": "^1.1.0"
   }
 }
