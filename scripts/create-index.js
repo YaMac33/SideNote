@@ -3,26 +3,27 @@ import path from 'path';
 import { glob } from 'glob';
 import { JSDOM } from 'jsdom';
 import lunr from 'lunr';
-import  TinySegmenter  from 'tiny-segmenter'; // ★ 変更点
+// ▼▼▼▼▼ 変更点 ▼▼▼▼▼
+import TinySegmenter from 'tiny-segmenter'; 
+// ▲▲▲▲▲ 変更ここまで ▲▲▲▲▲
 
-const siteRoot = './'; // サイトのルートをカレントディレクトリに変更
+const siteRoot = './';
 const outputDir = './';
 
-// ★★★★★ 追加：ここから ★★★★★
 // 日本語の分割ルールをLunr.jsに教える
-const segmenter = new TinySegmenter();
-const japaneseTokenizer = function (token) {
+// TinySegmenterのインスタンス化は不要で、コンストラクタ自体を渡す
+const japaneseTokenizer = (token) => {
+  const segmenter = new TinySegmenter(); // トークンごとにインスタンス化
   return segmenter.segment(token.toString());
 };
-lunr.tokenizer.registerFunction(japaneseTokenizer, 'japaneseTokenizer');
-// ★★★★★ 追加：ここまで ★★★★★
+lunr.tokenizer.register('japaneseTokenizer', japaneseTokenizer);
 
 async function createSearchIndex() {
   console.log('Starting to build search index...');
 
   const files = await glob('**/index.html', {
     cwd: siteRoot,
-    ignore: ['index.html', 'node_modules/**'], // ルートとnode_modulesを除外
+    ignore: ['index.html', 'node_modules/**'],
   });
 
   console.log(`Found ${files.length} HTML files to index.`);
@@ -37,12 +38,8 @@ async function createSearchIndex() {
     const document = dom.window.document;
 
     const title = document.querySelector('title')?.textContent || 'No title';
-    const body =
-      document.querySelector('main')?.textContent ||
-      document.body.textContent ||
-      '';
-
-    // ★ 変更点: URLを相対パスで生成
+    const body = document.querySelector('main')?.textContent || document.body.textContent || '';
+    
     const url = `./${file.replace(/index\.html$/, '')}`;
 
     documents.push({
@@ -58,8 +55,7 @@ async function createSearchIndex() {
   }
 
   const idx = lunr(function () {
-    // ★ 変更点: 日本語用の分割ルールを使用する
-    this.tokenizer = japaneseTokenizer;
+    this.tokenizer = lunr.tokenizer.registered.japaneseTokenizer;
     this.ref('id');
     this.field('title', { boost: 10 });
     this.field('body');
@@ -70,14 +66,8 @@ async function createSearchIndex() {
   });
 
   try {
-    await fs.writeFile(
-      path.join(outputDir, 'lunr-index.json'),
-      JSON.stringify(idx)
-    );
-    await fs.writeFile(
-      path.join(outputDir, 'document-store.json'),
-      JSON.stringify(documentStore)
-    );
+    await fs.writeFile(path.join(outputDir, 'lunr-index.json'), JSON.stringify(idx));
+    await fs.writeFile(path.join(outputDir, 'document-store.json'), JSON.stringify(documentStore));
     console.log('Search index and document store created successfully!');
   } catch (err) {
     console.error('Error writing index files:', err);
