@@ -8,14 +8,11 @@ import TinySegmenter from 'tiny-segmenter';
 const siteRoot = './';
 const outputDir = './';
 
-// 日本語の分割ルールを定義
+// 日本語用のトークナイザ
 const japaneseTokenizer = (token) => {
   const segmenter = new TinySegmenter();
   return segmenter.segment(token.toString());
 };
-
-// ▼▼▼▼▼ 変更点① ▼▼▼▼▼
-// この行を削除します → lunr.tokenizer.register('japaneseTokenizer', japaneseTokenizer);
 
 async function createSearchIndex() {
   console.log('Starting to build search index...');
@@ -38,7 +35,6 @@ async function createSearchIndex() {
 
     const title = document.querySelector('title')?.textContent || 'No title';
     const body = document.querySelector('main')?.textContent || document.body.textContent || '';
-
     const url = `./${file.replace(/index\.html$/, '')}`;
 
     documents.push({
@@ -54,15 +50,10 @@ async function createSearchIndex() {
   }
 
   const idx = lunr(function () {
-    // ▼▼▼▼▼ 変更点② ▼▼▼▼▼
-    // 登録された名前を呼び出すのではなく、定義した関数を直接セットします
     this.tokenizer = japaneseTokenizer;
-    // ▲▲▲▲▲ 変更ここまで ▲▲▲▲▲
-
     this.ref('id');
     this.field('title', { boost: 10 });
     this.field('body');
-
     documents.forEach(function (doc) {
       this.add(doc);
     }, this);
