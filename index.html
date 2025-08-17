@@ -15,7 +15,10 @@
   </script>
 
   <script src="https://cdn.tailwindcss.com"></script>
+
   <script src="https://unpkg.com/lunr/lunr.min.js"></script>
+
+  <script src="https://unpkg.com/tiny-segmenter/tiny_segmenter-0.2.0.js"></script>
 
   <style>
     body {
@@ -39,8 +42,13 @@
       text-decoration: none;
       color: inherit;
     }
-    .project-card:hover { transform: translateY(-5px); }
-    .project-card h3 { font-size: 1.2em; margin: 16px; }
+    .project-card:hover {
+      transform: translateY(-5px);
+    }
+    .project-card h3 {
+      font-size: 1.2em;
+      margin: 16px;
+    }
     .loader {
       border: 4px solid #f3f3f3;
       border-top: 4px solid #3498db;
@@ -54,7 +62,10 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    a { text-decoration: none; color: inherit; }
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
     .site-header {
       background-color: #fff;
       padding: 20px;
@@ -72,12 +83,33 @@
       justify-content: space-between;
       align-items: center;
     }
-    .logo { font-size: 28px; font-weight: bold; letter-spacing: 1.5px; transition: color 0.3s; }
-    .logo:hover { color: #00aaff; }
-    .main-nav ul { margin: 0; padding: 0; list-style: none; display: flex; }
-    .main-nav li { margin-left: 30px; }
-    .main-nav a { font-size: 16px; padding: 5px; position: relative; transition: color 0.3s; }
-    .main-nav a:hover { color: #00aaff; }
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      letter-spacing: 1.5px;
+      transition: color 0.3s;
+    }
+    .logo:hover {
+      color: #00aaff;
+    }
+    .main-nav ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+    }
+    .main-nav li {
+      margin-left: 30px;
+    }
+    .main-nav a {
+      font-size: 16px;
+      padding: 5px;
+      position: relative;
+      transition: color 0.3s;
+    }
+    .main-nav a:hover {
+      color: #00aaff;
+    }
     .main-nav a::after {
       content: '';
       position: absolute;
@@ -89,9 +121,15 @@
       transform: scaleX(0);
       transition: transform 0.3s;
     }
-    .main-nav a:hover::after { transform: scaleX(1); }
-    .logo-smart { color: #008080; }
-    .logo-side { color: #666666; }
+    .main-nav a:hover::after {
+      transform: scaleX(1);
+    }
+    .logo-smart {
+      color: #008080;
+    }
+    .logo-side {
+      color: #666666;
+    }
   </style>
 
 </head>
