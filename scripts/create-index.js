@@ -3,7 +3,9 @@ import path from 'path';
 import { glob } from 'glob';
 import { JSDOM } from 'jsdom';
 import lunr from 'lunr';
-import TinySegmenter from 'tiny-segmenter';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+const TinySegmenter = require('tiny-segmenter');
 
 const siteRoot = './';
 const outputDir = './';
