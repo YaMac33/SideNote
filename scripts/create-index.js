@@ -7,8 +7,8 @@ import lunr from 'lunr';
 import TinySegmenter from 'tiny-segmenter'; 
 // ▲▲▲▲▲ 変更ここまで ▲▲▲▲▲
 
-const siteRoot = './';
-const outputDir = './';
+const siteRoot = '/SideNote/';
+const outputDir = '/SideNote/';
 
 // 日本語の分割ルールをLunr.jsに教える
 // TinySegmenterのインスタンス化は不要で、コンストラクタ自体を渡す
@@ -21,7 +21,7 @@ lunr.tokenizer.register('japaneseTokenizer', japaneseTokenizer);
 async function createSearchIndex() {
   console.log('Starting to build search index...');
 
-  const files = await glob('**/index.html', {
+  const files = await glob('**/SideNote/index.html', {
     cwd: siteRoot,
     ignore: ['index.html', 'node_modules/**'],
   });
@@ -40,7 +40,7 @@ async function createSearchIndex() {
     const title = document.querySelector('title')?.textContent || 'No title';
     const body = document.querySelector('main')?.textContent || document.body.textContent || '';
     
-    const url = `./${file.replace(/index\.html$/, '')}`;
+    const url = `/SideNote/${file.replace(/index\.html$/, '')}`;
 
     documents.push({
       id: url,
