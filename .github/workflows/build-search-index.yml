@@ -1,43 +1,63 @@
-name: Build Search Index
+name: Deploy to GitHub Pages
 
-# mainブランチにpushされた時にこのアクションを実行する
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      # 1. リポジトリのコードをチェックアウトする
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      # 2. Node.js環境をセットアップする
-      - name: Setup Node.js
+      # ▼▼▼▼▼ ここからが重要な追加・修正部分 ▼▼▼▼▼
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Node.jsのバージョンを指定
+          node-version: '20'
+          cache: 'npm'
 
-      # 3. 必要なライブラリ（cheerio, glob）をインストールする
       - name: Install dependencies
-        run: npm install cheerio glob
+        # package.jsonに基づいてライブラリ (lunr, globなど) をインストール
+        run: npm install
 
-      # 4. JSON生成スクリプトを実行する
-      - name: Run script to generate search-index.json
-        run: node ./scripts/create-index.js # スクリプトのパスを正しく指定
+      - name: Create search index
+        # 更新したスクリプトを実行して2つのJSONファイルを生成
+        # 出力先はリポジトリのルート
+        run: node scripts/create-index.js
+        
+      - name: Check if index files are created
+        # ファイルが正しく生成されたか確認（デバッグ用）
+        run: ls -l lunr-index.json document-store.json
+      # ▲▲▲▲▲ ここまでが重要な追加・修正部分 ▲▲▲▲▲
 
-        # ↓↓↓↓↓↓ この3行をデバッグのために追加 ↓↓↓↓↓↓
-      - name: List files to check index.json
-        run: |
-          ls -l
-      # ↑↑↑↑↑↑ この3行をデバッグのために追加 ↑↑↑↑↑↑
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
 
-      # 5. 変更があった場合、自動でコミット＆プッシュする
-      - name: Commit and push if changed
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Upload artifact
+        # ルートディレクトリ全体（生成したJSONファイルも含む）をアップロード
+        uses: actions/upload-pages-artifact@v3
         with:
-          commit_message: 'docs: search-index.jsonを自動更新'
-          file_pattern: 'search-index.json' # このファイルに変更があった場合のみコミット
+          path: '.'
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
