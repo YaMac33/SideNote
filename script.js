@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error('Error fetching header:', error);
             const fallbackHeader = `
                 <header class="site-header">
-                    <div class="header-container"><a href="./" class="logo">SideNote</a></div>
+                    <div class="header-container"><a href="./" class="logo">memoblog</a></div>
                 </header>`;
             document.body.insertAdjacentHTML('afterbegin', fallbackHeader);
         });
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // 3. GitHub APIから記事一覧を取得
     const username = "YaMac33";
-    const repoName = "SideNote";
+    const repoName = "memoblog";
     const projectListContainer = document.getElementById("project-list-container");
 
     if (projectListContainer) {
