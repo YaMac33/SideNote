@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>25.8.24 ららぽーと</title>
+  <meta name="description" content="8月24日 晴れの一日を振り返る日記。" />
+  <style>
+    :root{
+      --bg:#f7f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --accent:#3b82f6;
+      --border:#e5e7eb;
+      --tag:#eef2ff;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Kaku Gothic ProN", Meiryo, "Noto Sans JP", sans-serif;
+      background:var(--bg);
+      color:var(--text);
+      line-height:1.7;
+    }
+    .wrap{max-width:960px;margin:48px auto;padding:0 20px}
+    header{margin-bottom:24px}
+    h1{
+      font-size:clamp(20px, 3vw, 28px);
+      margin:0 0 8px;
+    }
+    .meta{
+      color:var(--muted);
+      font-size:14px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:16px;
+    }
+    @media (min-width: 820px){
+      .grid{grid-template-columns:1fr 1fr}
+    }
+    section.card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:18px 18px 16px;
+      box-shadow: 0 1px 1px rgba(0,0,0,.02);
+    }
+    section.card h2{
+      margin:0 0 10px;
+      font-size:18px;
+      display:flex; align-items:center; gap:8px;
+    }
+    .list, .kv{margin:0;padding:0;list-style:none}
+    .kv li{
+      display:flex; gap:10px; padding:6px 0; border-bottom:1px dashed var(--border);
+    }
+    .kv li:last-child{border-bottom:none}
+    .kv .k{min-width:8em;color:var(--muted)}
+    .food{margin:8px 0 0 0; padding-left:1em}
+    .food li{margin:4px 0}
+    .ywt dt{font-weight:600;margin-top:8px}
+    .ywt dd{margin:2px 0 8px}
+    .tags{display:flex; flex-wrap:wrap; gap:8px; margin-top:8px}
+    .tag{
+      background:var(--tag);
+      color:#3730a3;
+      border:1px solid #e0e7ff;
+      border-radius:999px;
+      padding:4px 10px;
+      font-size:12px;
+    }
+    .muted{color:var(--muted)}
+    footer{
+      margin:24px 0 16px; color:var(--muted); font-size:12px; text-align:center;
+    }
+    .thank-list{margin:6px 0 0 0; padding-left:1.2em}
+    .advice{border-left:4px solid var(--accent); padding:8px 12px; background:#f0f7ff; border-radius:8px}
+    /* print */
+    @media print{
+      body{background:#fff}
+      .wrap{margin:0; max-width:100%}
+      section.card{break-inside:avoid; box-shadow:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>日記（8月24日｜晴れ）</h1>
+      <p class="meta">心と体のチェック／YWT振り返り／感謝・アイデア・明日の目標</p>
+    </header>
+
+    <main class="grid">
+
+      <!-- 心と体のセルフチェック -->
+      <section class="card">
+        <h2>🧭 心と体のセルフチェック</h2>
+        <ul class="kv">
+          <li><span class="k">今日の気分</span><span>😁</span></li>
+          <li><span class="k">睡眠時間</span><span>5時間</span></li>
+          <li><span class="k">今日の運動</span><span>ららぽを歩いた程度</span></li>
+          <li style="align-items:start"><span class="k">食事の記録</span>
+            <span>
+              <ul class="food">
+                <li>朝：納豆ご飯と煮卵</li>
+                <li>昼：豚大学の豚丼</li>
+                <li>夜：煮豚</li>
+              </ul>
+            </span>
+          </li>
+          <li><span class="k">セルフケア</span><span>夜8時半以降</span></li>
+        </ul>
+      </section>
+
+      <!-- 1日の振り返り（YWT） -->
+      <section class="card">
+        <h2>🔁 1日の振り返り（YWT）</h2>
+        <dl class="ywt">
+          <dt>Y（やったこと）</dt>
+          <dd>タイガが先に入ったポケモンセンターでおもちゃを欲しいと言ったが、ウルトラマンは我慢させた。</dd>
+          <dt>W（わかったこと）</dt>
+          <dd>我慢できるようになっていた。</dd>
+          <dt>T（次にやること）</dt>
+          <dd>できるだけ物やご褒美を与えないでできるように教育する。</dd>
+        </dl>
+      </section>
+
+      <!-- 自己肯定感ワーク -->
+      <section class="card">
+        <h2>🌱 自己肯定感を高めるワーク</h2>
+        <ul class="kv">
+          <li><span class="k">頑張ったこと</span><span>日記用のテンプレート作成</span></li>
+          <li><span class="k">よくできた理由</span><span>記録を残そうという意識ができたから</span></li>
+          <li style="align-items:start"><span class="k">感謝</span>
+            <span>
+              <ol class="thank-list">
+                <li>休暇の許可がもらえなかったことの文句を言わなかった</li>
+                <li>いつも子どもたちを見てくれるタマキに感謝</li>
+                <li>市連協の段取りありがとう</li>
+              </ol>
+            </span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- アイデアとひらめき -->
+      <section class="card">
+        <h2>💡 アイデアとひらめき</h2>
+        <ul class="kv">
+          <li><span class="k">インプット</span><span>運転中もメモを取りたくなることが多い</span></li>
+          <li><span class="k">ひらめき</span><span>手軽にメモを取り、それをデータベース化</span></li>
+          <li><span class="k">実現方法</span><span>NotionEasyForm</span></li>
+        </ul>
+        <div class="tags" aria-label="関連タグ">
+          <span class="tag">#仕事</span>
+          <span class="tag">#プライベート</span>
+        </div>
+      </section>
+
+      <!-- 自由記述 -->
+      <section class="card">
+        <h2>📝 自由記述</h2>
+        <p class="muted">（特になし）</p>
+      </section>
+
+      <!-- 明日の自分へ -->
+      <section class="card">
+        <h2>🎯 明日の自分へ</h2>
+        <ul class="kv">
+          <li><span class="k">目標</span><span>負の感情を表に出さない</span></li>
+          <li style="align-items:start"><span class="k">一言アドバイス</span>
+            <span class="advice">どうすれば一番ダメージの大きい仕返しができるか考えろ</span>
+          </li>
+        </ul>
+      </section>
+
+      <!-- 日付・天気 -->
+      <section class="card">
+        <h2>📅 日付・天気</h2>
+        <ul class="kv">
+          <li><span class="k">日付</span><span>8/24</span></li>
+          <li><span class="k">天気</span><span>晴れ</span></li>
+        </ul>
+      </section>
+
+    </main>
+
+    <footer>
+      © 2025 Daily Journal
+    </footer>
+  </div>
+</body>
+</html>
